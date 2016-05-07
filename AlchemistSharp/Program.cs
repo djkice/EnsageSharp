@@ -57,14 +57,11 @@ namespace AlchemistSharp
                 if (hasModifier)
                 {
                     aLogger.WriteLine(DateTime.Now + "- Modifier: {0}", modif.ElapsedTime);
-                }
-                if (modif.ToString().Contains("unstable_concoction"))
-                    {
-                    bLogger.WriteLine(DateTime.Now + "- Modifier: {0}", modif.RemainingTime);
-                    bLogger.WriteLine(DateTime.Now + "- Modifier: {0}", modif.IsStunDebuff);
-                    bLogger.WriteLine(DateTime.Now + "- Modifier: {0}", modif.ModifierAura);
-                    bLogger.WriteLine(DateTime.Now + "- Modifier: {0}", modif.ElapsedTime);
-                } 
+                    bLogger.WriteLine(DateTime.Now + "- Modifier Remain: {0}", modif.RemainingTime);
+                    bLogger.WriteLine(DateTime.Now + "- Modifier stun debuff: {0}", modif.IsStunDebuff);
+                    bLogger.WriteLine(DateTime.Now + "- Modifier aura: {0}", modif.ModifierAura);
+                    bLogger.WriteLine(DateTime.Now + "- Modifier elapsed time: {0}", modif.ElapsedTime);
+                
             }
             //aLogger.WriteLine(hasModifier);
             //me.FindModifier("unstable_concoction)");
@@ -94,7 +91,7 @@ namespace AlchemistSharp
                 aLogger.WriteLine(DateTime.Now + " - Hit inside modifiers.any point");
                 PrintModifiers(me);
                 stunTimer = new System.Timers.Timer();
-                stunTimer.Interval = 5000;
+                stunTimer.Interval = 5200;
                 aLogger.WriteLine("Firing event");
                 stunTimer.Elapsed += OnTimedEvent;
                 stunTimer.AutoReset = false;
