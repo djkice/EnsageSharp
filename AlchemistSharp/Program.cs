@@ -64,23 +64,27 @@ namespace AlchemistSharp
 
                 // {
                 //aLogger.WriteLine(DateTime.Now + " - I have modifier_alchemist_unstable_concoction");
-                if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
-                {
-                    manta.UseAbility();
-                    aLogger.WriteLine(DateTime.Now + " - Used manta");
-                    Utils.Sleep(150 + Game.Ping, "manta");
-                }
-            }
+                //if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
+                //    {
 
-            //aLogger.WriteLine(DateTime.Now + " - Hit inside modifiers.any point");
-            //PrintModifiers(me);
-            //stunTimer = new System.Timers.Timer();
-            //stunTimer.Interval = 5500;
-            //aLogger.WriteLine("Firing event");
-            //stunTimer.Elapsed += OnTimedEvent;
-            //stunTimer.AutoReset = false;
-            //stunTimer.Enabled = true;
+                //        manta.UseAbility();
+                //        aLogger.WriteLine(DateTime.Now + " - Used manta");
+                //        Utils.Sleep(150 + Game.Ping, "manta");
+
+                //    }
+                //}
+
+                aLogger.WriteLine(DateTime.Now + " - Hit inside modifiers.any point");
+                PrintModifiers(me);
+                stunTimer = new System.Timers.Timer();
+                stunTimer.Interval = 3000;
+                aLogger.WriteLine("Firing event");
+                stunTimer.Elapsed += OnTimedEvent;
+                stunTimer.AutoReset = false;
+                stunTimer.Enabled = true;
+            }
         }
+
 
     
 
@@ -102,15 +106,15 @@ namespace AlchemistSharp
         }
 
 
-        //private static void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-        //{
-        //    if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
-        //    {
-        //        aLogger.WriteLine(DateTime.Now + " - trying to use manta");
-        //        manta.UseAbility();
-        //        Utils.Sleep(150 + Game.Ping, "manta");
-        //    }
-        //}
+        private static void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
+            {
+                aLogger.WriteLine(DateTime.Now + " - trying to use manta");
+                manta.UseAbility();
+                Utils.Sleep(150 + Game.Ping, "manta");
+            }
+        }
 
         private static void Game_OnWndProc(WndEventArgs args)
         {
