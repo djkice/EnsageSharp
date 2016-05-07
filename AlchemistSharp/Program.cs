@@ -21,6 +21,8 @@ namespace AlchemistSharp
         //private static readonly Menu Menu = new Menu("AlchemistSharp", "AlchemistSharp", true, "npc_dota_hero_Alchemist", true);
         private static System.Timers.Timer stunTimer;
 
+
+
         static void Main(string[] args)
         {
             Game.OnUpdate += Game_OnUpdate;
@@ -59,7 +61,7 @@ namespace AlchemistSharp
             // if (me.Modifiers.Any(x => x.Name == "modifier_alchemist_unstable_concoction"))
             if (hasModifier)
             {
-                System.Threading.Thread.Sleep(5000);
+
                 // {
                 //aLogger.WriteLine(DateTime.Now + " - I have modifier_alchemist_unstable_concoction");
                 if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
