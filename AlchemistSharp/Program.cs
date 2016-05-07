@@ -51,7 +51,7 @@ namespace AlchemistSharp
 
             var hasModifier = me.HasModifier("modifier_alchemist_unstable_concoction");
             var test = me.Modifiers.ToList();
-            float stunDur = 5.8f;
+            float stunDur = 5.5f;
             foreach (var modif in test)
             {
                 
@@ -66,7 +66,7 @@ namespace AlchemistSharp
                     var elapsed = modif.ElapsedTime;
                     bLogger.WriteLine(DateTime.Now + "- Modifier elapsed time: {0} - {1}", modif.Name, modif.ElapsedTime);
 
-                    if (modif.Name == "modifier_alchemist_unstable_concoction" && modif.ElapsedTime <= stunDur)
+                    if (modif.Name == "modifier_alchemist_unstable_concoction" && modif.ElapsedTime >= stunDur)
                     {
                         if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
                         {
