@@ -51,9 +51,10 @@ namespace AlchemistSharp
 
             var hasModifier = me.HasModifier("modifier_alchemist_unstable_concoction");
             var test = me.Modifiers.ToList();
+            float stunDur = 5.5f;
             foreach (var modif in test)
             {
-
+                
 
                 if (me.HasModifier("modifier_stunned"))
                 {
@@ -62,7 +63,21 @@ namespace AlchemistSharp
 
                 if (hasModifier)
                 {
+                    var elapsed = modif.ElapsedTime;
                     bLogger.WriteLine(DateTime.Now + "- Modifier elapsed time: {0} - {1}", modif.Name, modif.ElapsedTime);
+                    if (modif.ElapsedTime <= stunDur)
+                    {
+                        if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
+                        {
+
+                            manta.UseAbility();
+                            aLogger.WriteLine(DateTime.Now + " - Used manta");
+                            Utils.Sleep(150 + Game.Ping, "manta");
+
+                        }
+
+                    }
+
                 }
 
 
