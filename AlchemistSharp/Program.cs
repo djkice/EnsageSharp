@@ -128,10 +128,11 @@ namespace AlchemistSharp
                 //now check which key was pressed using wparam
                 if (args.WParam == 'W')
                 {
-                    if (me.Modifiers.Any(x => x.Name == "modifier_alchemist_unstable_concoction")) { 
                     PrintModifiers(me);
+                    if (me.Modifiers.Any(x => x.Name == "modifier_alchemist_unstable_concoction")) { 
+                   
                     stunTimer = new System.Timers.Timer();
-                    stunTimer.Interval = 5500;
+                    stunTimer.Interval = 4000;
                     aLogger.WriteLine("Firing event");
                     stunTimer.Elapsed += OnTimedEvent;
                     stunTimer.AutoReset = false;
