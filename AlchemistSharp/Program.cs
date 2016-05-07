@@ -78,7 +78,7 @@ namespace AlchemistSharp
             //stunTimer.Enabled = true;
         }
 
-    }
+    
 
         private static void PrintModifiers(Unit unit)
         {
