@@ -76,7 +76,7 @@ namespace AlchemistSharp
                     bLogger.WriteLine(DateTime.Now + "- Modifier Name: {0}", modif.Name);
                     bLogger.WriteLine(DateTime.Now + "- Modifier Remain: {0}", modif.RemainingTime);
                     bLogger.WriteLine(DateTime.Now + "- Modifier elapsed time: {0}", modif.ElapsedTime);
-                }
+              //  }
 
 
             }
