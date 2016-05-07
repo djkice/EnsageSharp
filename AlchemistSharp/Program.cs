@@ -44,9 +44,6 @@ namespace AlchemistSharp
             if (manta == null)
                 manta = me.FindItem("item_manta");
 
-            if (Stun == null)
-                Stun = me.Spellbook.Spell2;
-
             var modifiers = me.Modifiers.ToList();
             float stunDur = 5.4f;
 
