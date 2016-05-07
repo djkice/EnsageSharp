@@ -8,7 +8,7 @@ using Ensage.Common;
 using Ensage.Common.Extensions;
 using Ensage.Common.Menu;
 using System.Timers;
-
+using System.IO;
 
 namespace AlchemistSharp
 {
@@ -48,6 +48,7 @@ namespace AlchemistSharp
 
             stunTimer = new System.Timers.Timer();
             stunTimer.Interval = 5500;
+            PrintModifiers(me);
             if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
             {
                 if (me.Modifiers.Any(x => x.Name == "modifier_alchemist_unstable_concoction"))
@@ -61,6 +62,27 @@ namespace AlchemistSharp
             }
 
         }
+
+        private static void PrintModifiers(Unit unit)
+        {
+            using (StreamWriter aLogger = new StreamWriter(@"C:\modifierlog.txt"))
+            {
+
+                var buffs = unit.Modifiers.ToList();
+                if (buffs.Any())
+                {
+                    foreach (var buff in buffs)
+                    {
+                        aLogger.WriteLine(unit.Name + " has modifier: " + buff.Name);
+                    }
+                }
+                else
+                {
+                    aLogger.WriteLine(unit.Name + " does not have any buff");
+                }
+            }
+        }
+
 
         private static void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
