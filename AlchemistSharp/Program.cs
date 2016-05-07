@@ -14,8 +14,8 @@ namespace AlchemistSharp
 {
     internal class Program
     {
-        public static StreamWriter aLogger = new StreamWriter(@"C:\allitems.txt");
-        public static StreamWriter bLogger = new StreamWriter(@"C:\modifier.txt");
+        public static StreamWriter aLogger = new StreamWriter(@"C:\PlaySharp\Logs\allitems.txt");
+        public static StreamWriter bLogger = new StreamWriter(@"C:\PlaySharp\Logs\modifier.txt");
         private static Ability Stun;
         private static Item manta;
         private static Hero me;
