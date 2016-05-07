@@ -55,19 +55,28 @@ namespace AlchemistSharp
             {
                 aLogger.WriteLine(DateTime.Now + "- Modifier: {0}", modif);
 
+
+                if (me.HasModifier("modifier_stunned"))
+                {
+                    bLogger.WriteLine(DateTime.Now + "- Now Stunned: {0}", modif.ElapsedTime);
+                }
+
                 if (hasModifier)
                 {
-                    if (me.HasModifier("modifier_stunned")) {
-                        bLogger.WriteLine(DateTime.Now + "- Now Stunned: {0}", modif.ElapsedTime);
+                    if (modif.ElapsedTime <= 4)
+                    {
+                        if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
+                        {
+                            aLogger.WriteLine(DateTime.Now + " - trying to use manta");
+                            manta.UseAbility();
+                            Utils.Sleep(150 + Game.Ping, "manta");
+                        }
                     }
                     aLogger.WriteLine(DateTime.Now + "- Modifier etime: {0}", modif.ElapsedTime);
                     bLogger.WriteLine(DateTime.Now + "- Modifier Remain: {0}", modif.RemainingTime);
                     bLogger.WriteLine(DateTime.Now + "- Modifier elapsed time: {0}", modif.ElapsedTime);
                 }
-                if (me.HasModifier("modifier_stunned"))
-                {
-                    bLogger.WriteLine(DateTime.Now + "- Now Stunned: {0}", modif.ElapsedTime);
-                }
+
 
             }
             //aLogger.WriteLine(hasModifier);
@@ -98,7 +107,7 @@ namespace AlchemistSharp
                 aLogger.WriteLine(DateTime.Now + " - Hit inside modifiers.any point");
                 PrintModifiers(me);
                 stunTimer = new System.Timers.Timer();
-                stunTimer.Interval = 5350;
+                stunTimer.Interval = 5300;
                 aLogger.WriteLine("Firing event");
                 stunTimer.Elapsed += OnTimedEvent;
                 stunTimer.AutoReset = false;
