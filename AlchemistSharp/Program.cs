@@ -14,7 +14,8 @@ namespace AlchemistSharp
 {
     internal class Program
     {
-        public static StreamWriter aLogger = new StreamWriter(@"C:\modifierlog.txt");
+        public static StreamWriter aLogger = new StreamWriter(@"C:\allitems.txt");
+        public static StreamWriter bLogger = new StreamWriter(@"C:\modifier.txt");
         private static Ability Stun;
         private static Item manta;
         private static Hero me;
@@ -49,6 +50,22 @@ namespace AlchemistSharp
                 Stun = me.Spellbook.Spell2;
 
             var hasModifier = me.HasModifier("modifier_alchemist_unstable_concoction");
+            var test = me.Modifiers.ToList();
+            foreach (var modif in test)
+            {
+                aLogger.WriteLine(DateTime.Now + "- Modifier: {0}", modif);
+                if (hasModifier)
+                {
+                    aLogger.WriteLine(DateTime.Now + "- Modifier: {0}", modif.ElapsedTime);
+                }
+                if (modif.ToString().Contains("unstable_concoction"))
+                    {
+                    bLogger.WriteLine(DateTime.Now + "- Modifier: {0}", modif.RemainingTime);
+                    bLogger.WriteLine(DateTime.Now + "- Modifier: {0}", modif.IsStunDebuff);
+                    bLogger.WriteLine(DateTime.Now + "- Modifier: {0}", modif.ModifierAura);
+                    bLogger.WriteLine(DateTime.Now + "- Modifier: {0}", modif.ElapsedTime);
+                } 
+            }
             //aLogger.WriteLine(hasModifier);
             //me.FindModifier("unstable_concoction)");
 
