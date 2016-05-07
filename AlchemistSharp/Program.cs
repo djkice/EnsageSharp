@@ -51,7 +51,7 @@ namespace AlchemistSharp
 
             var hasModifier = me.HasModifier("modifier_alchemist_unstable_concoction");
             var test = me.Modifiers.ToList();
-            float stunDur = 5.5f;
+            float stunDur = 5.8f;
             foreach (var modif in test)
             {
                 
