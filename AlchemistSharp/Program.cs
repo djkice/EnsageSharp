@@ -99,19 +99,11 @@ namespace AlchemistSharp
 
         private static void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            try
+            if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
             {
-                if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
-                {
-                    aLogger.WriteLine(DateTime.Now + " - trying to use manta");
-                    manta.UseAbility();
-                    Utils.Sleep(150 + Game.Ping, "manta");
-                }
-            }
-            catch
-            {
-                aLogger.WriteLine(DateTime.Now + " - Exception Caught: {0}", e);
-
+                aLogger.WriteLine(DateTime.Now + " - trying to use manta");
+                manta.UseAbility();
+                Utils.Sleep(150 + Game.Ping, "manta");
             }
         }
 
