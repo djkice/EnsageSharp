@@ -54,9 +54,10 @@ namespace AlchemistSharp
             foreach (var modif in test)
             {
                 aLogger.WriteLine(DateTime.Now + "- Modifier: {0}", modif);
+
                 if (hasModifier)
                 {
-                    aLogger.WriteLine(DateTime.Now + "- Modifier: {0}", modif.ElapsedTime);
+                    aLogger.WriteLine(DateTime.Now + "- Modifier etime: {0}", modif.ElapsedTime);
                     bLogger.WriteLine(DateTime.Now + "- Modifier Remain: {0}", modif.RemainingTime);
                     bLogger.WriteLine(DateTime.Now + "- Modifier stun debuff: {0}", modif.IsStunDebuff);
                     bLogger.WriteLine(DateTime.Now + "- Modifier aura: {0}", modif.ModifierAura);
@@ -92,7 +93,7 @@ namespace AlchemistSharp
                 aLogger.WriteLine(DateTime.Now + " - Hit inside modifiers.any point");
                 PrintModifiers(me);
                 stunTimer = new System.Timers.Timer();
-                stunTimer.Interval = 5200;
+                stunTimer.Interval = 5450;
                 aLogger.WriteLine("Firing event");
                 stunTimer.Elapsed += OnTimedEvent;
                 stunTimer.AutoReset = false;
