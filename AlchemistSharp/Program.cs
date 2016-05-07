@@ -53,30 +53,16 @@ namespace AlchemistSharp
             var test = me.Modifiers.ToList();
             foreach (var modif in test)
             {
-                aLogger.WriteLine(DateTime.Now + "- Now hit Modifier: {0}", modif.Name);
 
 
                 if (me.HasModifier("modifier_stunned"))
                 {
-                    bLogger.WriteLine(DateTime.Now + "- Now Stunned: {0}", modif.ElapsedTime);
+                    bLogger.WriteLine(DateTime.Now + "- Now Stunned: {0} - {1}", modif.Name, modif.ElapsedTime);
                 }
 
                 if (hasModifier)
                 {
-                    //{
-                    //    if (modif.ElapsedTime <= 4)
-                    //    {
-                    //        if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
-                    //        {
-                    //            aLogger.WriteLine(DateTime.Now + " - trying to use manta");
-                    //            manta.UseAbility();
-                    //            Utils.Sleep(150 + Game.Ping, "manta");
-                    //        }
-                    //    }
-                    aLogger.WriteLine(DateTime.Now + "- Modifier etime: {0}", modif.ElapsedTime);
-                    bLogger.WriteLine(DateTime.Now + "- Modifier Name: {0}", modif.Name);
-                    bLogger.WriteLine(DateTime.Now + "- Modifier Remain: {0}", modif.RemainingTime);
-                    bLogger.WriteLine(DateTime.Now + "- Modifier elapsed time: {0}", modif.ElapsedTime);
+                    bLogger.WriteLine(DateTime.Now + "- Modifier elapsed time: {0} - {1}", modif.Name, modif.ElapsedTime);
                 }
 
 
