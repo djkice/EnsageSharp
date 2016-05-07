@@ -28,6 +28,7 @@ namespace AlchemistSharp
             var menuAlchemistSharp = new Menu("Cancel Stun", "opsi");
             Menu.AddSubMenu(menuAlchemistSharp);
             menuAlchemistSharp.AddItem(new MenuItem("enable", "Enable").SetValue(true));
+            Menu.AddToMainMenu();
         }
 
         public static void Game_OnUpdate(EventArgs args)
