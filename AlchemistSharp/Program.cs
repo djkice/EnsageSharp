@@ -14,7 +14,7 @@ namespace AlchemistSharp
 {
     internal class Program
     {
-        public static StreamWriter aLogger = new StreamWriter(@"C:\modifierlog.txt"));
+        public static StreamWriter aLogger = new StreamWriter(@"C:\modifierlog.txt");
         private static Ability Stun;
         private static Item manta;
         private static Hero me;
