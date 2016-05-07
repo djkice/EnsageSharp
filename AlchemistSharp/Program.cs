@@ -57,15 +57,16 @@ namespace AlchemistSharp
 
 
             // if (me.Modifiers.Any(x => x.Name == "modifier_alchemist_unstable_concoction"))
-            //if (hasModifier)
+            if (hasModifier)
+                System.Threading.Thread.Sleep(5000);
             // {
             //aLogger.WriteLine(DateTime.Now + " - I have modifier_alchemist_unstable_concoction");
-            //if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
-            //{
-            //    manta.UseAbility();
-            //    aLogger.WriteLine(DateTime.Now + " - Used manta");
-            //    Utils.Sleep(150 + Game.Ping, "manta");
-            //}
+            if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
+            {
+                manta.UseAbility();
+                aLogger.WriteLine(DateTime.Now + " - Used manta");
+                Utils.Sleep(150 + Game.Ping, "manta");
+            }
 
             //aLogger.WriteLine(DateTime.Now + " - Hit inside modifiers.any point");
             //PrintModifiers(me);
@@ -75,9 +76,9 @@ namespace AlchemistSharp
             //stunTimer.Elapsed += OnTimedEvent;
             //stunTimer.AutoReset = false;
             //stunTimer.Enabled = true;
-            //}
-
         }
+
+    }
 
         private static void PrintModifiers(Unit unit)
         {
@@ -97,43 +98,43 @@ namespace AlchemistSharp
         }
 
 
-        private static void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
-        {
-            if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
-            {
-                aLogger.WriteLine(DateTime.Now + " - trying to use manta");
-                manta.UseAbility();
-                Utils.Sleep(150 + Game.Ping, "manta");
-            }
-        }
+        //private static void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        //{
+        //    if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
+        //    {
+        //        aLogger.WriteLine(DateTime.Now + " - trying to use manta");
+        //        manta.UseAbility();
+        //        Utils.Sleep(150 + Game.Ping, "manta");
+        //    }
+        //}
 
         private static void Game_OnWndProc(WndEventArgs args)
         {
-            if (!Game.IsInGame)
-            {
-                return;
-            }
+            //if (!Game.IsInGame)
+            //{
+            //    return;
+            //}
 
-            //Check if the message is a key down message
-            if (args.Msg == (uint)Utils.WindowsMessages.WM_KEYDOWN)
-            {
-                //now check which key was pressed using wparam
-                if (args.WParam == 'W')
-                {
-                    PrintModifiers(me);
-                    if (me.Modifiers.Any(x => x.Name == "modifier_alchemist_unstable_concoction")) { 
+            ////Check if the message is a key down message
+            //if (args.Msg == (uint)Utils.WindowsMessages.WM_KEYDOWN)
+            //{
+            //    //now check which key was pressed using wparam
+            //    if (args.WParam == 'W')
+            //    {
+            //        PrintModifiers(me);
+            //        if (me.Modifiers.Any(x => x.Name == "modifier_alchemist_unstable_concoction")) { 
                    
-                    stunTimer = new System.Timers.Timer();
-                    stunTimer.Interval = 4000;
-                    aLogger.WriteLine("Firing event");
-                    stunTimer.Elapsed += OnTimedEvent;
-                    stunTimer.AutoReset = false;
-                    stunTimer.Enabled = true;
-                }
+            //        stunTimer = new System.Timers.Timer();
+            //        stunTimer.Interval = 4000;
+            //        aLogger.WriteLine("Firing event");
+            //        stunTimer.Elapsed += OnTimedEvent;
+            //        stunTimer.AutoReset = false;
+            //        stunTimer.Enabled = true;
+            //    }
 
-                }
+            //    }
 
-            }
+            //}
         }
     }
 }
