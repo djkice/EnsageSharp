@@ -77,7 +77,7 @@ namespace AlchemistSharp
                 aLogger.WriteLine(DateTime.Now + " - Hit inside modifiers.any point");
                 PrintModifiers(me);
                 stunTimer = new System.Timers.Timer();
-                stunTimer.Interval = 3000;
+                stunTimer.Interval = 5500;
                 aLogger.WriteLine("Firing event");
                 stunTimer.Elapsed += OnTimedEvent;
                 stunTimer.AutoReset = false;
