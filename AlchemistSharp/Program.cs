@@ -61,6 +61,7 @@ namespace AlchemistSharp
                     bLogger.WriteLine(DateTime.Now + "- Modifier stun debuff: {0}", modif.IsStunDebuff);
                     bLogger.WriteLine(DateTime.Now + "- Modifier aura: {0}", modif.ModifierAura);
                     bLogger.WriteLine(DateTime.Now + "- Modifier elapsed time: {0}", modif.ElapsedTime);
+                }
                 
             }
             //aLogger.WriteLine(hasModifier);
