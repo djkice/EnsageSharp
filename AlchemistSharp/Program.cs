@@ -47,7 +47,7 @@ namespace AlchemistSharp
                 Stun = me.Spellbook.Spell2;
 
             var hasModifier = me.HasModifier("modifier_alchemist_unstable_concoction");
-            aLogger.WriteLine(hasModifier);
+            //aLogger.WriteLine(hasModifier);
 
 
             stunTimer = new System.Timers.Timer();
@@ -56,9 +56,10 @@ namespace AlchemistSharp
 
             if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
             {
-                if (me.Modifiers.Any(x => x.Name == "modifier_alchemist_unstable_concoction"))
+               // if (me.Modifiers.Any(x => x.Name == "modifier_alchemist_unstable_concoction"))
+               if (hasModifier)
                 {
-                    aLogger.WriteLine("Hit inside modifiers.any point");
+                    aLogger.WriteLine(DateTime.Now + " - Hit inside modifiers.any point");
                     PrintModifiers(me);
                     stunTimer = new System.Timers.Timer();
                     stunTimer.Interval = 5500;
@@ -74,32 +75,32 @@ namespace AlchemistSharp
         private static void PrintModifiers(Unit unit)
         {
 
-         
-                var buffs = unit.Modifiers.ToList();
-                if (buffs.Any())
+            var buffs = unit.Modifiers.ToList();
+            if (buffs.Any())
+            {
+                foreach (var buff in buffs)
                 {
-                    foreach (var buff in buffs)
-                    {
-                        aLogger.WriteLine(unit.Name + " has modifier: " + buff.Name);
-                    }
-                }
-                else
-                {
-                    aLogger.WriteLine(unit.Name + " does not have any buff");
+                    aLogger.WriteLine(DateTime.Now + " - "+ unit.Name + " has modifier: " + buff.Name);
                 }
             }
-        
+            else
+            {
+                aLogger.WriteLine(unit.Name + " does not have any buff");
+            }
+        }
 
 
         private static void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            try {
+            try
+            {
+                aLogger.WriteLine(DateTime.Now + " - trying to use manta");
                 manta.UseAbility();
                 Utils.Sleep(150 + Game.Ping, "manta");
             }
             catch
             {
-                aLogger.WriteLine("Exception Caught: {0}", e);
+                aLogger.WriteLine(DateTime.Now + " - Exception Caught: {0}", e);
 
             }
         }
