@@ -56,26 +56,26 @@ namespace AlchemistSharp
             //PrintModifiers(me);
 
 
-               // if (me.Modifiers.Any(x => x.Name == "modifier_alchemist_unstable_concoction"))
-               if (hasModifier)
-                {
-                //aLogger.WriteLine(DateTime.Now + " - I have modifier_alchemist_unstable_concoction");
-                //if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
-                //{
-                //    manta.UseAbility();
-                //    aLogger.WriteLine(DateTime.Now + " - Used manta");
-                //    Utils.Sleep(150 + Game.Ping, "manta");
-                //}
+            // if (me.Modifiers.Any(x => x.Name == "modifier_alchemist_unstable_concoction"))
+            //if (hasModifier)
+            // {
+            //aLogger.WriteLine(DateTime.Now + " - I have modifier_alchemist_unstable_concoction");
+            //if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
+            //{
+            //    manta.UseAbility();
+            //    aLogger.WriteLine(DateTime.Now + " - Used manta");
+            //    Utils.Sleep(150 + Game.Ping, "manta");
+            //}
 
-                //aLogger.WriteLine(DateTime.Now + " - Hit inside modifiers.any point");
-                //PrintModifiers(me);
-                //stunTimer = new System.Timers.Timer();
-                //stunTimer.Interval = 5500;
-                //aLogger.WriteLine("Firing event");
-                //stunTimer.Elapsed += OnTimedEvent;
-                //stunTimer.AutoReset = false;
-                //stunTimer.Enabled = true;
-            }
+            //aLogger.WriteLine(DateTime.Now + " - Hit inside modifiers.any point");
+            //PrintModifiers(me);
+            //stunTimer = new System.Timers.Timer();
+            //stunTimer.Interval = 5500;
+            //aLogger.WriteLine("Firing event");
+            //stunTimer.Elapsed += OnTimedEvent;
+            //stunTimer.AutoReset = false;
+            //stunTimer.Enabled = true;
+            //}
 
         }
 
@@ -87,7 +87,7 @@ namespace AlchemistSharp
             {
                 foreach (var buff in buffs)
                 {
-                    aLogger.WriteLine(DateTime.Now + " - "+ unit.Name + " has modifier: " + buff.Name);
+                    aLogger.WriteLine(DateTime.Now + " - " + unit.Name + " has modifier: " + buff.Name);
                 }
             }
             else
@@ -128,7 +128,7 @@ namespace AlchemistSharp
                 //now check which key was pressed using wparam
                 if (args.WParam == 'W')
                 {
-                    
+                    if (me.Modifiers.Any(x => x.Name == "modifier_alchemist_unstable_concoction")) { 
                     PrintModifiers(me);
                     stunTimer = new System.Timers.Timer();
                     stunTimer.Interval = 5500;
@@ -136,10 +136,13 @@ namespace AlchemistSharp
                     stunTimer.Elapsed += OnTimedEvent;
                     stunTimer.AutoReset = false;
                     stunTimer.Enabled = true;
+                }
 
                 }
 
             }
+        }
     }
 }
+
 
