@@ -14,6 +14,7 @@ namespace AlchemistSharp
 {
     internal class Program
     {
+        public static StreamWriter aLogger = new StreamWriter(@"C:\modifierlog.txt"));
         private static Ability Stun;
         private static Item manta;
         private static Hero me;
@@ -45,16 +46,23 @@ namespace AlchemistSharp
             if (Stun == null)
                 Stun = me.Spellbook.Spell2;
 
+            var hasModifier = me.HasModifier("modifier_alchemist_unstable_concoction");
+            aLogger.WriteLine(hasModifier);
+
 
             stunTimer = new System.Timers.Timer();
             stunTimer.Interval = 5500;
             PrintModifiers(me);
+
             if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
             {
                 if (me.Modifiers.Any(x => x.Name == "modifier_alchemist_unstable_concoction"))
                 {
+                    aLogger.WriteLine("Hit inside modifiers.any point");
+                    PrintModifiers(me);
                     stunTimer = new System.Timers.Timer();
                     stunTimer.Interval = 5500;
+                    aLogger.WriteLine("Firing event");
                     stunTimer.Elapsed += OnTimedEvent;
                     stunTimer.AutoReset = false;
                     stunTimer.Enabled = true;
@@ -65,9 +73,8 @@ namespace AlchemistSharp
 
         private static void PrintModifiers(Unit unit)
         {
-            using (StreamWriter aLogger = new StreamWriter(@"C:\modifierlog.txt"))
-            {
 
+         
                 var buffs = unit.Modifiers.ToList();
                 if (buffs.Any())
                 {
@@ -81,13 +88,20 @@ namespace AlchemistSharp
                     aLogger.WriteLine(unit.Name + " does not have any buff");
                 }
             }
-        }
+        
 
 
         private static void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            manta.UseAbility();
-            Utils.Sleep(150 + Game.Ping, "manta");
+            try {
+                manta.UseAbility();
+                Utils.Sleep(150 + Game.Ping, "manta");
+            }
+            catch
+            {
+                aLogger.WriteLine("Exception Caught: {0}", e);
+
+            }
         }
 
         private static void Game_OnWndProc(WndEventArgs args)
