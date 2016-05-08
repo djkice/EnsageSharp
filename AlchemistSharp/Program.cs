@@ -45,7 +45,7 @@ namespace AlchemistSharp
                 manta = me.FindItem("item_manta");
 
             var modifiers = me.Modifiers.ToList();
-            float stunDur = 5.4f;
+            float stunDur = 5.4f - (Game.Ping / 1000);
 
             foreach (var modif in modifiers)
             {
