@@ -69,7 +69,7 @@ namespace AlchemistSharp
                  if (me.CanAttack() && me.CanCast() && !me.IsChanneling())
                 {
                     rage.UseAbility();
-                    Utils.Sleep(250 + Game.Ping, "rage");
+                    Utils.Sleep(500 + Game.Ping, "rage");
                 }
                
             }
