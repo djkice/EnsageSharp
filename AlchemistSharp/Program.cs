@@ -73,12 +73,11 @@ namespace AlchemistSharp
         public static void Game_OnUpdate(EventArgs args)
         {
             me = ObjectManager.LocalHero;
-            var modifier = me.FindModifier("modifier_alchemist_unstable_concoction");
             float stunBrew = 5.4f - (Game.Ping / 1000);
             float maxStun = 5.0f - (Game.Ping / 1000);
             var stunrange = 175;
             var acidrange = 625;
-            var invisModif = me.Modifiers.Any(x => x.Name == "modifier_item_silver_edge_windwalk" || x.Name == "modifier_item_invisibility_edge_windwalk");
+            
 
             var priority = Menu.Item("myComboPriority").GetValue<PriorityChanger>();
             var spells = ObjectManager.LocalHero.Spellbook.Spells.OrderByDescending(spell => priority.GetPriority(spell.Name));
@@ -119,11 +118,15 @@ namespace AlchemistSharp
                 useItem = Menu.Item("Items").GetValue<AbilityToggler>();
                 useitemCheck = true;
             }
+
             if (!useabilityCheck)
             {
                 useAbility = Menu.Item("Abilities").GetValue<AbilityToggler>();
                 useabilityCheck = true;
             }
+
+            var modifier = me.FindModifier("modifier_alchemist_unstable_concoction");
+            var invisModif = me.Modifiers.Any(x => x.Name == "modifier_item_silver_edge_windwalk" || x.Name == "modifier_item_invisibility_edge_windwalk");
 
             if (doCombo)
             {
