@@ -12,7 +12,7 @@ namespace AlchemistSharp
     internal class Program
     {
 
-        private static Ability acid, concoction, rage;
+        private static Ability acid, concoction, rage, throwconc;
         private static Item blink, abyssal, manta, bkb;
         private static Hero me, target;
         private static readonly Menu Menu = new Menu("AlchemistSharp", "AlchemistSharp", true, "npc_dota_hero_Alchemist", true);
@@ -94,6 +94,8 @@ namespace AlchemistSharp
             if (concoction == null)
                 concoction = me.Spellbook.SpellW;
 
+            if (throwconc == null)
+                throwconc = me.FindSpell("alchemist_unstable_concoction_throw");
 
             if (rage == null)
                 rage = me.Spellbook.SpellR;
@@ -123,6 +125,7 @@ namespace AlchemistSharp
             }
 
             var concModif = me.FindModifier("modifier_alchemist_unstable_concoction");
+            var throwModif = me.FindModifier("modifier_alchemist_unstable_concoction");
             var invisModif = me.Modifiers.Any(x => x.Name == "modifier_item_silver_edge_windwalk" || x.Name == "modifier_item_invisibility_edge_windwalk");
             //var priority = Menu.Item("myComboPriority").GetValue<PriorityChanger>();
             //var spells = ObjectManager.LocalHero.Spellbook.Spells.OrderByDescending(spell => priority.GetPriority(spell.Name));
@@ -212,9 +215,9 @@ namespace AlchemistSharp
 
                         if (concModif != null && useAbility.IsEnabled(concoction.Name) && concModif.ElapsedTime < stunBrew && concModif.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange && !target.UnitState.HasFlag(UnitState.MagicImmune))
                         {
-                            concoction.CastStun(target);
+                            throwconc.UseAbility(target);
 
-                            Utils.Sleep(250 + Game.Ping, "concoction");
+                            Utils.Sleep(250 + Game.Ping, "throwconc");
                         }
 
                         if (concoction != null && concoction.CanBeCasted() && useAbility.IsEnabled(concoction.Name) && Utils.SleepCheck("concoction"))
