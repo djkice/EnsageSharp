@@ -5,6 +5,7 @@ using Ensage;
 using Ensage.Common;
 using Ensage.Common.Extensions;
 using Ensage.Common.Menu;
+using SharpDX;
 
 namespace AlchemistSharp
 {
@@ -39,16 +40,16 @@ namespace AlchemistSharp
 
             // Trying priority changer thanks to Moones
 
-            Menu.AddItem(
-                new MenuItem("myComboPriority", "ComboPriority: ").SetValue(
-                    new PriorityChanger(
-                        new List<string>(
-                            new[]
-                                {
-                                    "item_blink", "alchemist_unstable_concoction", "item_abyssal_blade", "alchemist_chemical_rage",
-                                    "alchemist_acid_spray", "item_manta", "item_black_king_bar"
-                                }),
-                        "MyComboPriority")));
+            //Menu.AddItem(
+            //    new MenuItem("myComboPriority", "ComboPriority: ").SetValue(
+            //        new PriorityChanger(
+            //            new List<string>(
+            //                new[]
+            //                    {
+            //                        "item_blink", "alchemist_unstable_concoction", "item_abyssal_blade", "alchemist_chemical_rage",
+            //                        "alchemist_acid_spray", "item_manta", "item_black_king_bar"
+            //                    }),
+            //            "MyComboPriority")));
 
             var comboItems = new Dictionary<string, bool>
             {
@@ -74,14 +75,9 @@ namespace AlchemistSharp
         {
             me = ObjectManager.LocalHero;
             float stunBrew = 5.4f - (Game.Ping / 1000);
-            float maxStun = 5.0f - (Game.Ping / 1000);
-            var stunrange = 175;
+            float maxStun = 4.8f - (Game.Ping / 1000);
+            var stunrange = 775;
             var acidrange = 625;
-            
-
-            var priority = Menu.Item("myComboPriority").GetValue<PriorityChanger>();
-            var spells = ObjectManager.LocalHero.Spellbook.Spells.OrderByDescending(spell => priority.GetPriority(spell.Name));
-
 
             if (!Game.IsInGame || Game.IsPaused || Game.IsWatchingGame)
                 return;
@@ -93,10 +89,11 @@ namespace AlchemistSharp
                 return;
 
             if (acid == null)
-                acid = me.Spellbook.Spell1;
+                acid = me.Spellbook.SpellQ;
 
             if (concoction == null)
-                concoction = me.Spellbook.Spell2;
+                concoction = me.Spellbook.SpellW;
+
 
             if (rage == null)
                 rage = me.Spellbook.SpellR;
@@ -125,8 +122,10 @@ namespace AlchemistSharp
                 useabilityCheck = true;
             }
 
-            var modifier = me.FindModifier("modifier_alchemist_unstable_concoction");
+            var concModif = me.FindModifier("modifier_alchemist_unstable_concoction");
             var invisModif = me.Modifiers.Any(x => x.Name == "modifier_item_silver_edge_windwalk" || x.Name == "modifier_item_invisibility_edge_windwalk");
+            //var priority = Menu.Item("myComboPriority").GetValue<PriorityChanger>();
+            //var spells = ObjectManager.LocalHero.Spellbook.Spells.OrderByDescending(spell => priority.GetPriority(spell.Name));
 
             if (doCombo)
             {
@@ -178,89 +177,94 @@ namespace AlchemistSharp
                         // add mana check for ult
 
 
-                        foreach (var spell in spells)
+                        //foreach (var spell in spells)
+                        //{
+                        //    if (spell.Name == "alchemist_acid_spray")
+                        //    {
+                        if (acid != null & acid.CanBeCasted() && useAbility.IsEnabled(acid.Name) && Utils.SleepCheck("acid") && me.Distance2D(target) <= acidrange)
                         {
-                            if (spell.Name == "alchemist_acid_spray")
-                            {
-                                if (acid != null & acid.CanBeCasted() && useAbility.IsEnabled(acid.Name) && Utils.SleepCheck("acid") && me.Distance2D(target) <= acidrange)
-                                {
-                                    acid.UseAbility(target.Position);
-                                    Utils.Sleep(150 + Game.Ping, "acid");
-                                }
-                            }
-
-                            if (spell.Name == "alchemist_chemical_rage")
-                            {
-                                if (rage != null && rage.CanBeCasted() && useAbility.IsEnabled(rage.Name) && Utils.SleepCheck("rage"))
-                                {
-                                    rage.UseAbility();
-                                    Utils.Sleep(150 + Game.Ping, "rage");
-                                }
-                            }
-
-                            if (spell.Name == "item_blink")
-                            {
-                                if (blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && me.Distance2D(target) > 500 && me.Distance2D(target) <= 1170 && Utils.SleepCheck("blink"))
-                                {
-                                    blink.UseAbility(target.Position);
-                                    Utils.Sleep(250 + Game.Ping, "blink");
-                                }
-                            }
-                            if (spell.Name == "alchemist_unstable_concoction")
-                            {
-                                if (modifier != null && useAbility.IsEnabled(concoction.Name) && modifier.ElapsedTime < stunBrew && modifier.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange)
-                                {
-                                    concoction.UseAbility(target.Position);
-                                    Utils.Sleep(250 + Game.Ping, "concoction");
-                                }
-                                if (concoction != null && concoction.CanBeCasted() && useAbility.IsEnabled(concoction.Name) && Utils.SleepCheck("concoction") && me.Distance2D(target) <= stunrange && !target.UnitState.HasFlag(UnitState.MagicImmune))
-                                {
-                                    concoction.UseAbility();
-                                    Utils.Sleep(150 + Game.Ping, "Concoction");
-                                }
-                            }
-
-                            // if (target.CanAttack) {
-                            if (spell.Name == "item_abyssal_blade")
-                            {
-                                if (abyssal != null && abyssal.CanBeCasted() && useItem.IsEnabled(abyssal.Name) && Utils.SleepCheck("abyssal"))
-                                {
-                                    abyssal.CastStun(target);
-                                    Utils.Sleep(250 + Game.Ping, "abyssal");
-                                }
-                            }
-                            // }
-                            if (spell.Name == "item_manta")
-                            {
-                                if (manta != null && manta.CanBeCasted() && useItem.IsEnabled(manta.Name) && Utils.SleepCheck("manta"))
-                                {
-                                    manta.UseAbility();
-                                    Utils.Sleep(150 + Game.Ping, "manta");
-                                }
-                            }
-
-
-                            if (spell.Name == "item_black_king_bar")
-                            {
-                                if (bkb != null && bkb.CanBeCasted() && useItem.IsEnabled(bkb.Name) && Utils.SleepCheck("bkb") && me.Distance2D(target) <= 620)
-                                {
-                                    bkb.UseAbility();
-                                    Utils.Sleep(150 + Game.Ping, "bkb");
-                                }
-                            }
+                            acid.UseAbility(target.Position);
+                            Utils.Sleep(150 + Game.Ping, "acid");
                         }
-                        var illusions = ObjectManager.GetEntities<Hero>().Where(f => f.IsAlive && f.IsControllable && f.Team == me.Team && f.IsIllusion && f.Modifiers.Any(y => y.Name != "modifier_kill")).ToList();
+                        //    }
 
-                        foreach (var illusion in illusions.TakeWhile(illusion => Utils.SleepCheck("illu_attacking" + illusion.Handle)))
+                        //    if (spell.Name == "alchemist_chemical_rage")
+                        //    {
+                        if (rage != null && rage.CanBeCasted() && useAbility.IsEnabled(rage.Name) && Utils.SleepCheck("rage"))
                         {
-                            illusion.Attack(target);
-                            Utils.Sleep(350, "illu_attacking" + illusion.Handle);
+                            rage.UseAbility();
+                            Utils.Sleep(250 + Game.Ping, "rage");
                         }
+                        //}
+
+                        //    if (spell.Name == "item_blink")
+                        //    {
+                        if (blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && me.Distance2D(target) > 500 && me.Distance2D(target) <= 1170 && Utils.SleepCheck("blink"))
+                        {
+                            blink.UseAbility(target.Position);
+                            Utils.Sleep(250 + Game.Ping, "blink");
+
+                        }
+                        //    }
+                        //    if (spell.Name == "alchemist_unstable_concoction")
+                        //    {
+
+
+                        if (concModif != null && useAbility.IsEnabled(concoction.Name) && concModif.ElapsedTime < stunBrew && concModif.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange && !target.UnitState.HasFlag(UnitState.MagicImmune))
+                        {
+                            concoction.CastStun(target);
+
+                            Utils.Sleep(250 + Game.Ping, "concoction");
+                        }
+
+                        if (concoction != null && concoction.CanBeCasted() && useAbility.IsEnabled(concoction.Name) && Utils.SleepCheck("concoction"))
+                        {
+                            concoction.UseAbility();
+                            Utils.Sleep(250 + Game.Ping, "concoction");
+                        }
+                        //    }
+
+                        //    // if (target.CanAttack) {
+                        //    if (spell.Name == "item_abyssal_blade")
+                        //    {
+                        if (abyssal != null && abyssal.CanBeCasted() && useItem.IsEnabled(abyssal.Name) && Utils.SleepCheck("abyssal"))
+                        {
+                            abyssal.CastStun(target);
+                            Utils.Sleep(250 + Game.Ping, "abyssal");
+                        }
+                        //    }
+                        //    // }
+                        //    if (spell.Name == "item_manta")
+                        //    {
+                        if (manta != null && manta.CanBeCasted() && useItem.IsEnabled(manta.Name) && Utils.SleepCheck("manta"))
+                        {
+                            manta.UseAbility();
+                            Utils.Sleep(150 + Game.Ping, "manta");
+                        }
+                        //    }
+
+
+                        //    if (spell.Name == "item_black_king_bar")
+                        //    {
+                        if (bkb != null && bkb.CanBeCasted() && useItem.IsEnabled(bkb.Name) && Utils.SleepCheck("bkb") && me.Distance2D(target) <= 620)
+                        {
+                            bkb.UseAbility();
+                            Utils.Sleep(150 + Game.Ping, "bkb");
+                        }
+                        //    }
+                    }
+                    var illusions = ObjectManager.GetEntities<Hero>().Where(f => f.IsAlive && f.IsControllable && f.Team == me.Team && f.IsIllusion && f.Modifiers.Any(y => y.Name != "modifier_kill")).ToList();
+
+                    foreach (var illusion in illusions.TakeWhile(illusion => Utils.SleepCheck("illu_attacking" + illusion.Handle)))
+                    {
+                        illusion.Attack(target);
+                        Utils.Sleep(350, "illu_attacking" + illusion.Handle);
                     }
                 }
             }
+            //}
 
-            if (modifier != null && modifier.ElapsedTime >= stunBrew && Menu.Item("dodgeTog").GetValue<bool>())
+            if (concModif != null && concModif.ElapsedTime >= stunBrew && Menu.Item("dodgeTog").GetValue<bool>())
             {
                 if (manta != null && manta.CanBeCasted() && Utils.SleepCheck("manta"))
                 {
