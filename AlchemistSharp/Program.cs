@@ -79,7 +79,10 @@ namespace AlchemistSharp
             var stunrange = 175;
             var acidrange = 625;
             var invisModif = me.Modifiers.Any(x => x.Name == "modifier_item_silver_edge_windwalk" || x.Name == "modifier_item_invisibility_edge_windwalk");
-            var spells = ObjectManager.LocalHero.Spellbook.Spells.OrderByDescending(spell => Menu.Item("myComboPriority").GetValue<PriorityChanger>().GetPriority(spell.Name));
+
+            var priority = Menu.Item("myComboPriority").GetValue<PriorityChanger>();
+            var spells = ObjectManager.LocalHero.Spellbook.Spells.OrderByDescending(spell => priority.GetPriority(spell.Name));
+
 
             if (!Game.IsInGame || Game.IsPaused || Game.IsWatchingGame)
                 return;
