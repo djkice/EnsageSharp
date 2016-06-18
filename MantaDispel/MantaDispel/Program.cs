@@ -17,19 +17,16 @@ namespace MantaDispel
     internal class Program
     {
         private static Item mantaItem;
-        private static bool useitemCheck;
+
         private static Hero me;
-        private static AbilityToggler useItem;
+
         private static readonly Menu Menu = new Menu("MantaDispel", "MantaDispel", true, "item_manta", true);
 
         static void Main(string[] args)
         {
             Game.OnUpdate += Game_OnUpdate;
             
-            var menuManta = new Menu("Dispel using Manta", "opsi");
             Menu.AddItem(new MenuItem("dispelTog", "Use Manta to Dispel").SetValue(true));
-
-            Menu.AddSubMenu(menuManta);
             Menu.AddToMainMenu();
         }
 
@@ -57,7 +54,7 @@ namespace MantaDispel
                
                 if (hasModifier != null)
                 {
-                    if (mantaItem != null && mantaItem.CanBeCasted() && useItem.IsEnabled(mantaItem.Name) && Utils.SleepCheck("manta") && Menu.Item("dispelTog").GetValue<bool>())
+                    if (mantaItem != null && mantaItem.CanBeCasted() && Utils.SleepCheck("manta") && Menu.Item("dispelTog").GetValue<bool>())
                     {
                         mantaItem.UseAbility();
                         Utils.Sleep(150 + Game.Ping, "mantaItem");
