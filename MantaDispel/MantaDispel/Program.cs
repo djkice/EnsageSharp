@@ -29,7 +29,7 @@ namespace MantaDispel
 
               {"modifier_item_diffusal_blade_slow", true}, { "modifier_bloodthorn_debuff", true }, {"modifier_desolator_buff", true }, {"modifier_item_dustofappearance", true },
               {"modifier_item_ethereal_blade_slow", true }, { "modifier_item_medallion_of_courage_armor_reduction", true }, { "modifier_rod_of_atos_debuff", true },
-              { "modifier_orchid_malevolence_debuff", true }, { "modifier_item_shivas_guard_blast", true }, { "modifier_item_solar_crest_armor_reduction", true }, { "modifier_item_urn_of_shadows", true }, { "modifier_item_veil_of_discord_debuff", true },
+              { "modifier_orchid_malevolence_debuff", true }, { "modifier_item_shivas_guard_blast", true }, { "modifier_item_solar_crest_armor_reduction", true }, { "modifier_item_urn_of_shadows", true }, { "modifier_item_veil_of_discord_debuff", true }
             };
 
             Menu.AddItem(new MenuItem("Buffs", "Auto Dispel:").SetValue(new AbilityToggler(dispelBuffs)));
@@ -56,11 +56,15 @@ namespace MantaDispel
                 useitemCheck = true;
             }
 
-            if (mantaItem != null && mantaItem.CanBeCasted() && useItem.IsEnabled(mantaItem.Name) && Utils.SleepCheck("manta") && Menu.Item("dispelTog").GetValue<bool>())
+
+
+            if (mantaItem != null && mantaItem.CanBeCasted() && useItem.IsEnabled(mantaItem.Name) &&
+                Utils.SleepCheck("manta") && Menu.Item("dispelTog").GetValue<bool>())
             {
                 mantaItem.UseAbility();
                 Utils.Sleep(150 + Game.Ping, "mantaItem");
             }
+
 
         }
 
