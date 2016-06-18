@@ -20,7 +20,7 @@ namespace MantaDispel
         private static bool useitemCheck;
         private static Hero me;
         private static AbilityToggler useItem;
-        private static readonly Menu Menu = new Menu("MantaDispel", "MantaDispel", false);
+        private static readonly Menu Menu = new Menu("MantaDispel", "MantaDispel", true, "npc_dota_hero_Alchemist", true);
 
         static void Main(string[] args)
         {
@@ -28,6 +28,7 @@ namespace MantaDispel
             
             var menuManta = new Menu("Dispel using Manta", "opsi");
             Menu.AddItem(new MenuItem("dispelTog", "Use Manta to Dispel").SetValue(true));
+
             var dispelBuffs = new Dictionary<string, bool>
             {
 
