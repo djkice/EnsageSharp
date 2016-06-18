@@ -19,6 +19,7 @@ namespace MantaDispel
         private static Item mantaItem;
         private static bool useitemCheck;
         private static Hero me;
+        private static AbilityToggler useItem;
         private static readonly Menu Menu = new Menu("MantaDispel", "MantaDispel", false);
 
         static void Main(string[] args)
@@ -54,11 +55,6 @@ namespace MantaDispel
             if (mantaItem == null)
                 mantaItem = me.FindItem("item_manta");
 
-            if (!useitemCheck)
-            {
-                useItem = Menu.Item("dispelTog").GetValue<bool>();
-                useitemCheck = true;
-            }
 
             if (mantaItem != null && mantaItem.CanBeCasted() && useItem.IsEnabled(mantaItem.Name) &&
                 Utils.SleepCheck("manta") && Menu.Item("dispelTog").GetValue<bool>())
