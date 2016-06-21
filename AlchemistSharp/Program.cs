@@ -27,14 +27,8 @@ namespace AlchemistSharp
             Game.OnUpdate += Game_OnUpdate;
             Game.OnWndProc += Game_OnWndProc;
 
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.WriteLine("---------------------------------");
-            Console.WriteLine("| AlchemistSharp 2.0.0.0 Loaded |");
-            Console.WriteLine("---------------------------------");
-            Console.ResetColor();
 
-
-            var menuRage = new Menu("Auto Chemical Range", "opsi");
+            var menuRage = new Menu("Auto Chemical Rage", "opsi");
             Menu.AddItem(new MenuItem("comboKey", "Combo Key").SetValue(new KeyBind(32, KeyBindType.Press)));
             Menu.AddItem(new MenuItem("dodgeTog", "Use Manta - Dodge Self Stun").SetValue(true));
 
@@ -64,7 +58,7 @@ namespace AlchemistSharp
             Menu.AddItem(new MenuItem("Items", "Use Items:").SetValue(new AbilityToggler(comboItems)));
             Menu.AddItem(new MenuItem("Abilities", "Use Abilities:").SetValue(new AbilityToggler(comboAbilities)));
 
-            menuRage.AddItem(new MenuItem("rageTog", "Use Chemical Range").SetValue(true));
+            menuRage.AddItem(new MenuItem("rageTog", "Use Chemical Rage").SetValue(true));
             menuRage.AddItem(new MenuItem("ragehealth", "If Health % is:").SetValue(new Slider(15)));
             Menu.AddSubMenu(menuRage);
             Menu.AddToMainMenu();
