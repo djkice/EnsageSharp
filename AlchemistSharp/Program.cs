@@ -210,7 +210,7 @@ namespace AlchemistSharp
 
                         if (concModif != null && useAbility.IsEnabled(concoction.Name) && concModif.ElapsedTime < stunBrew && concModif.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange && !target.UnitState.HasFlag(UnitState.MagicImmune))
                         {
-                            if (distance2D.enemy < 400 || !me.CanAttack)
+                            if (me.Distance2D(target) < 400 || !me.CanAttack)
                             {
                                 me.Move(target.Predict(400)) 
                             }
