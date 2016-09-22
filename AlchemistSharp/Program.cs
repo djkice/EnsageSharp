@@ -210,6 +210,10 @@ namespace AlchemistSharp
 
                         if (concModif != null && useAbility.IsEnabled(concoction.Name) && concModif.ElapsedTime < stunBrew && concModif.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange && !target.UnitState.HasFlag(UnitState.MagicImmune))
                         {
+                            if (distance2D.enemy < 400 || !me.CanAttack)
+                            {
+                                me.Move(target.Predict(400)) 
+                            }
                             throwconc.UseAbility(target);
 
                             Utils.Sleep(250 + Game.Ping, "throwconc");
@@ -249,6 +253,8 @@ namespace AlchemistSharp
                             bkb.UseAbility();
                             Utils.Sleep(150 + Game.Ping, "bkb");
                         }
+                        
+                        
                         //    }
                     }
                     var illusions = ObjectManager.GetEntities<Hero>().Where(f => f.IsAlive && f.IsControllable && f.Team == me.Team && f.IsIllusion && f.Modifiers.Any(y => y.Name != "modifier_kill")).ToList();
