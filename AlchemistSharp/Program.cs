@@ -127,8 +127,8 @@ namespace AlchemistSharp
             if (doCombo)
             {
 
-               //target = me.ClosestToMouseTarget(1000);
-                target = TargetSelector.ClosestToMouse(me, 2000)
+               target = me.ClosestToMouseTarget(1001);
+                //target = TargetSelector.ClosestToMouse(me, 2000)
 
                 if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
                 {
