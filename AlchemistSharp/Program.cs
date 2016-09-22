@@ -138,21 +138,21 @@ namespace AlchemistSharp
                 var canCancel = Orbwalking.CanCancelAnimation();
                 if (canCancel)
                 {
-                    if (target != null && !target.IsVisible && !Orbwalking.AttackOnCooldown(target))
-                    {
-                        target = me.ClosestToMouseTarget();
-                    }
-                    else if (target == null || !Orbwalking.AttackOnCooldown(target) && target.HasModifiers(new[]
-                                    {
-                                        "modifier_dazzle_shallow_grave", "modifier_item_blade_mail_reflect",
-                                    }, false))
-                    {
+                //    if (target != null && !target.IsVisible && !Orbwalking.AttackOnCooldown(target))
+                 //   {
+                  //      target = me.ClosestToMouseTarget();
+                //    }
+                 //   else if (target == null || !Orbwalking.AttackOnCooldown(target) && target.HasModifiers(new[]
+                //                    {
+                   //                     "modifier_dazzle_shallow_grave", "modifier_item_blade_mail_reflect",
+                  //                  }, false))
+                 //   {
                    //    var bestAa = me.BestAATarget();
                  //       if (bestAa != null)
                   //     {
                   //        target = me.BestAATarget();
                   //      }
-                    }
+                 //   }
                 }
 
                 if (target != null && target.IsAlive && !target.IsInvul() && !target.IsIllusion)
