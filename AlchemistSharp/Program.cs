@@ -147,11 +147,11 @@ namespace AlchemistSharp
                                         "modifier_dazzle_shallow_grave", "modifier_item_blade_mail_reflect",
                                     }, false))
                     {
-                       var bestAa = me.BestAATarget();
-                        if (bestAa != null)
-                       {
-                          target = me.BestAATarget();
-                        }
+                   //    var bestAa = me.BestAATarget();
+                 //       if (bestAa != null)
+                  //     {
+                  //        target = me.BestAATarget();
+                  //      }
                     }
                 }
 
