@@ -218,9 +218,9 @@ namespace AlchemistSharp
                         if (concoction != null && concoction.CanBeCasted() && useAbility.IsEnabled(concoction.Name) && Utils.SleepCheck("concoction"))
                         {
                             concoction.UseAbility();
-                            if (me.Distance2D(target) < 400 || !me.CanAttack())
+                            if (me.Distance2D(target) < 700 || !me.CanAttack())
                             {
-                                me.Move(target.Predict(400));
+                                me.Move(target.Predict(700));
                             }
                             
                             Utils.Sleep(250 + Game.Ping, "concoction");
