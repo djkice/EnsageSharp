@@ -127,7 +127,8 @@ namespace AlchemistSharp
             if (doCombo)
             {
 
-                target = me.ClosestToMouseTarget(1000);
+               //target = me.ClosestToMouseTarget(1000);
+                target = TargetSelector.ClosestToMouse(me, 2000)
 
                 if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
                 {
@@ -146,10 +147,10 @@ namespace AlchemistSharp
                                         "modifier_dazzle_shallow_grave", "modifier_item_blade_mail_reflect",
                                     }, false))
                     {
-                        var bestAa = me.BestAATarget();
+                       var bestAa = me.BestAATarget();
                         if (bestAa != null)
-                        {
-                            target = me.BestAATarget();
+                       {
+                          target = me.BestAATarget();
                         }
                     }
                 }
