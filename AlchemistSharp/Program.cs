@@ -210,10 +210,6 @@ namespace AlchemistSharp
 
                         if (concModif != null && useAbility.IsEnabled(concoction.Name) && concModif.ElapsedTime < stunBrew && concModif.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange && !target.UnitState.HasFlag(UnitState.MagicImmune))
                         {
-                            if (me.Distance2D(target) < 400 || !me.CanAttack())
-                            {
-                                me.Move(target.Predict(400));
-                            }
                             throwconc.UseAbility(target);
 
                             Utils.Sleep(250 + Game.Ping, "throwconc");
@@ -222,6 +218,11 @@ namespace AlchemistSharp
                         if (concoction != null && concoction.CanBeCasted() && useAbility.IsEnabled(concoction.Name) && Utils.SleepCheck("concoction"))
                         {
                             concoction.UseAbility();
+                            if (me.Distance2D(target) < 400 || !me.CanAttack())
+                            {
+                                me.Move(target.Predict(400));
+                            }
+                            
                             Utils.Sleep(250 + Game.Ping, "concoction");
                         }
                         //    }
