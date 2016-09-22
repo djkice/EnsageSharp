@@ -212,7 +212,7 @@ namespace AlchemistSharp
                         {
                             if (me.Distance2D(target) < 400 || !me.CanAttack())
                             {
-                                me.Move(target.Predict(400)) 
+                                me.Move(target.Predict(400));
                             }
                             throwconc.UseAbility(target);
 
