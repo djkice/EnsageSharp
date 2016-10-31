@@ -108,7 +108,6 @@ namespace AlchemistSharp
             }
 
             var concModif = me.FindModifier("modifier_alchemist_unstable_concoction");
-            var throwModif = me.FindModifier("modifier_alchemist_unstable_concoction");
             var invisModif = me.Modifiers.Any(x => x.Name == "modifier_item_silver_edge_windwalk" || x.Name == "modifier_item_invisibility_edge_windwalk");
 
             if (doCombo)
@@ -210,7 +209,7 @@ namespace AlchemistSharp
                                     concoction.UseAbility();
                                     Utils.Sleep(250 + Game.Ping, "concoction");
                                 }
-                                if (concModif != null && useAbility.IsEnabled(concoction.Name) && !target.UnitState.HasFlag(UnitState.MagicImmune) && me.Distance2D(target) < 1000)
+                                if (concModif != null && useAbility.IsEnabled(concoction.Name) && /* !target.UnitState.HasFlag(UnitState.MagicImmune)  && */ me.Distance2D(target) < 1000)
                                 {
                                     if (me.Distance2D(target) > stunrange)
                                     {
@@ -250,13 +249,13 @@ namespace AlchemistSharp
                             }
                         }
 
-                        var illusions = ObjectManager.GetEntities<Hero>().Where(f => f.IsAlive && f.IsControllable && f.Team == me.Team && f.IsIllusion && f.Modifiers.Any(y => y.Name != "modifier_kill")).ToList();
+                        /*var illusions = ObjectManager.GetEntities<Hero>().Where(f => f.IsAlive && f.IsControllable && f.Team == me.Team && f.IsIllusion && f.Modifiers.Any(y => y.Name != "modifier_kill")).ToList();
 
                         foreach (var illusion in illusions.TakeWhile(illusion => Utils.SleepCheck("illu_attacking" + illusion.Handle)))
                         {
                             illusion.Attack(target);
                             Utils.Sleep(350, "illu_attacking" + illusion.Handle);
-                        }
+                        }*/
 
                     }
                 }
