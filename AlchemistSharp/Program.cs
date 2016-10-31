@@ -249,13 +249,13 @@ namespace AlchemistSharp
                             }
                         }
 
-                        /*var illusions = ObjectManager.GetEntities<Hero>().Where(f => f.IsAlive && f.IsControllable && f.Team == me.Team && f.IsIllusion && f.Modifiers.Any(y => y.Name != "modifier_kill")).ToList();
+                        var illusions = ObjectManager.GetEntities<Hero>().Where(f => f.IsAlive && f.IsControllable && f.Team == me.Team && f.IsIllusion && f.Modifiers.Any(y => y.Name != "modifier_kill")).ToList();
 
                         foreach (var illusion in illusions.TakeWhile(illusion => Utils.SleepCheck("illu_attacking" + illusion.Handle)))
                         {
                             illusion.Attack(target);
                             Utils.Sleep(350, "illu_attacking" + illusion.Handle);
-                        }*/
+                        }
 
                     }
                 }
