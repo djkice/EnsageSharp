@@ -24,6 +24,7 @@ namespace AlchemistSharp
         private static bool useitemCheck;
         private static bool useabilityCheck;
         private static ParticleEffect targetParticle;
+        private static Dictionary<float, Orbwalker> orbwalkerDictionary = new Dictionary<float, Orbwalker>(); 
 
         static void Main(string[] args)
         {
@@ -67,6 +68,11 @@ namespace AlchemistSharp
 
             if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Alchemist)
                 return;
+            
+            if (ObjectManager.LocalHero == null)
+            {
+                return;
+            }
 
             if (me == null)
                 return;
@@ -167,8 +173,19 @@ namespace AlchemistSharp
                             if (!Utils.SleepCheck("attacking"))
                             {
                                 {
-                                    Orbwalking.Orbwalk(target, Game.Ping);
-                                    Utils.Sleep(200, "attacking");
+                                    //Orbwalking.Orbwalk(target, Game.Ping);
+                                 foreach (
+                                        var unit in ObjectManager.GetEntities<Unit>().Where(x => x.IsAlive && x.IsVisible && x.IsControllable))
+                                        {
+                                        Orbwalker orbwalker;
+                                            if (!orbwalkerDictionary.TryGetValue(unit.Handle, out orbwalker))
+                                            {
+                                                orbwalker = new Orbwalker(unit);
+                                                orbwalkerDictionary.Add(unit.Handle, orbwalker);
+                                            }
+                                        orbwalker.OrbwalkOn(target);
+                                        Utils.Sleep(200, "attacking");
+                                        }
                                 }
                             }
 
@@ -249,13 +266,13 @@ namespace AlchemistSharp
                             }
                         }
 
-                        var illusions = ObjectManager.GetEntities<Hero>().Where(f => f.IsAlive && f.IsControllable && f.Team == me.Team && f.IsIllusion && f.Modifiers.Any(y => y.Name != "modifier_kill")).ToList();
+                        /*var illusions = ObjectManager.GetEntities<Hero>().Where(f => f.IsAlive && f.IsControllable && f.Team == me.Team && f.IsIllusion && f.Modifiers.Any(y => y.Name != "modifier_kill")).ToList();
 
                         foreach (var illusion in illusions.TakeWhile(illusion => Utils.SleepCheck("illu_attacking" + illusion.Handle)))
                         {
                             illusion.Attack(target);
                             Utils.Sleep(350, "illu_attacking" + illusion.Handle);
-                        }
+                        }*/
 
                     }
                 }
