@@ -144,7 +144,7 @@ namespace AlchemistSharp
                     targetParticle.SetControlPoint(7, target.Position);
                 }
 
-                var canCancel = Orbwalking.CanCancelAnimation();
+                /*var canCancel = Orbwalking.CanCancelAnimation();
 
                 if (canCancel)
                 {
@@ -161,7 +161,7 @@ namespace AlchemistSharp
                             target = me.BestAATarget();
                         }
                     }
-                }
+                }*/
 
                 if (target != null && target.IsAlive && !target.IsInvul() && !target.IsIllusion)
                 {
@@ -275,10 +275,10 @@ namespace AlchemistSharp
 
                     }
                 }
-                /*else
+                else
                 {
                     me.Move(Game.MousePosition);
-                }*/
+                }
             }
 
             if (concModif != null && concModif.ElapsedTime >= stunBrew && Menu.Item("dodgeTog").GetValue<bool>())
