@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Ensage;
@@ -11,6 +11,8 @@ namespace AlchemistSharp
 {
     internal class Program
     {
+        // Add armlet logic to combo
+        // Add shadow blade after casting stun
 
         private static Ability acid, concoction, rage, throwconc;
         private static Item blink, abyssal, manta, bkb;
@@ -21,29 +23,16 @@ namespace AlchemistSharp
         private static AbilityToggler useAbility;
         private static bool useitemCheck;
         private static bool useabilityCheck;
+        private static ParticleEffect targetParticle;
 
         static void Main(string[] args)
         {
             Game.OnUpdate += Game_OnUpdate;
             Game.OnWndProc += Game_OnWndProc;
 
-
             var menuRage = new Menu("Auto Chemical Rage", "opsi");
             Menu.AddItem(new MenuItem("comboKey", "Combo Key").SetValue(new KeyBind(32, KeyBindType.Press)));
             Menu.AddItem(new MenuItem("dodgeTog", "Use Manta - Dodge Self Stun").SetValue(true));
-
-            // Trying priority changer thanks to Moones
-
-            //Menu.AddItem(
-            //    new MenuItem("myComboPriority", "ComboPriority: ").SetValue(
-            //        new PriorityChanger(
-            //            new List<string>(
-            //                new[]
-            //                    {
-            //                        "item_blink", "alchemist_unstable_concoction", "item_abyssal_blade", "alchemist_chemical_rage",
-            //                        "alchemist_acid_spray", "item_manta", "item_black_king_bar"
-            //                    }),
-            //            "MyComboPriority")));
 
             var comboItems = new Dictionary<string, bool>
             {
@@ -121,38 +110,52 @@ namespace AlchemistSharp
             var concModif = me.FindModifier("modifier_alchemist_unstable_concoction");
             var throwModif = me.FindModifier("modifier_alchemist_unstable_concoction");
             var invisModif = me.Modifiers.Any(x => x.Name == "modifier_item_silver_edge_windwalk" || x.Name == "modifier_item_invisibility_edge_windwalk");
-            //var priority = Menu.Item("myComboPriority").GetValue<PriorityChanger>();
-            //var spells = ObjectManager.LocalHero.Spellbook.Spells.OrderByDescending(spell => priority.GetPriority(spell.Name));
 
             if (doCombo)
             {
-
-               target = me.ClosestToMouseTarget(1001);
-                //target = TargetSelector.ClosestToMouse(me, 2000)
+                var target = TargetSelector.ClosestToMouse(me);
+                //target = me.ClosestToMouseTarget(1000);
 
                 if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
                 {
                     target = null;
                 }
 
+                if (targetParticle == null && target != null)
+                {
+                    targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
+                }
+
+                if ((target == null || !target.IsVisible || !target.IsAlive) && targetParticle != null)
+                {
+                    targetParticle.Dispose();
+                    targetParticle = null;
+                }
+
+                if (target != null && targetParticle != null)
+                {
+                    targetParticle.SetControlPoint(2, me.Position);
+                    targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
+                    targetParticle.SetControlPoint(7, target.Position);
+                }
+
                 var canCancel = Orbwalking.CanCancelAnimation();
+
                 if (canCancel)
                 {
                     if (target != null && !target.IsVisible && !Orbwalking.AttackOnCooldown(target))
                     {
-                        target = me.ClosestToMouseTarget();
+                        //target = me.ClosestToMouseTarget();
+                        target = TargetSelector.ClosestToMouse(me);
                     }
-                 //   else if (target == null || !Orbwalking.AttackOnCooldown(target) && target.HasModifiers(new[]
-                //                    {
-                   //                     "modifier_dazzle_shallow_grave", "modifier_item_blade_mail_reflect",
-                  //                  }, false))
-                 //   {
-                   //    var bestAa = me.BestAATarget();
-                 //       if (bestAa != null)
-                  //     {
-                  //        target = me.BestAATarget();
-                  //      }
-                 //   }
+                    else if (target == null || !Orbwalking.AttackOnCooldown(target) && target.HasModifiers(new[] { "modifier_dazzle_shallow_grave", "modifier_item_blade_mail_reflect" }, false))
+                    {
+                        var bestAa = me.BestAATarget();
+                        if (bestAa != null)
+                        {
+                            target = me.BestAATarget();
+                        }
+                    }
                 }
 
                 if (target != null && target.IsAlive && !target.IsInvul() && !target.IsIllusion)
@@ -166,108 +169,102 @@ namespace AlchemistSharp
                             {
                                 {
                                     Orbwalking.Orbwalk(target, Game.Ping);
+                                    Utils.Sleep(200, "attacking");
                                 }
-                                Utils.Sleep(200, "attacking");
+                            }
+
+
+                            if (acid != null & acid.CanBeCasted() && useAbility.IsEnabled(acid.Name) && Utils.SleepCheck("acid") && me.Distance2D(target) <= acidrange)
+                            {
+                                acid.UseAbility(target.Position);
+                                Utils.Sleep(150 + Game.Ping, "acid");
+                            }
+
+                            if (rage != null && rage.CanBeCasted() && useAbility.IsEnabled(rage.Name) && Utils.SleepCheck("rage"))
+                            {
+                                rage.UseAbility();
+                                Utils.Sleep(250 + Game.Ping, "rage");
+                            }
+
+                            if (blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && me.Distance2D(target) > 500 && me.Distance2D(target) <= 1170 && Utils.SleepCheck("blink"))
+                            {
+                                blink.UseAbility(target.Position);
+                                Utils.Sleep(250 + Game.Ping, "blink");
+                            }
+
+                            //if (concModif != null && useAbility.IsEnabled(concoction.Name) && concModif.ElapsedTime < stunBrew && concModif.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange && !target.UnitState.HasFlag(UnitState.MagicImmune))
+                            //{
+                            //    throwconc.UseAbility(target);
+                            //    Utils.Sleep(250 + Game.Ping, "throwconc");
+                            //}
+                            //if (concoction != null && concoction.CanBeCasted() && useAbility.IsEnabled(concoction.Name) && Utils.SleepCheck("concoction"))
+                            //{
+                            //    concoction.UseAbility();
+                            //    Utils.Sleep(250 + Game.Ping, "concoction");
+                            //}
+
+                            if (me.Distance2D(target) < 1000)
+                            {
+                                if (concoction != null && concoction.CanBeCasted() && useAbility.IsEnabled(concoction.Name) && Utils.SleepCheck("concoction"))
+                                {
+                                    concoction.UseAbility();
+                                    Utils.Sleep(250 + Game.Ping, "concoction");
+                                }
+                                if (concModif != null && useAbility.IsEnabled(concoction.Name) && !target.UnitState.HasFlag(UnitState.MagicImmune) && me.Distance2D(target) < 1000)
+                                {
+                                    if (me.Distance2D(target) > stunrange)
+                                    {
+                                        if (!me.CanAttack())
+                                        {
+                                            me.Move(target.Predict(stunrange));
+                                        }
+                                        else
+                                        {
+                                            me.Attack(target);
+                                        }
+                                    }
+                                    if (concModif.ElapsedTime < stunBrew && concModif.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange)
+                                    {
+                                        throwconc.UseAbility(target);
+                                    }
+                                }
+                                Utils.Sleep(250 + Game.Ping, "throwconc");
+                            }
+
+                            if (abyssal != null && abyssal.CanBeCasted() && useItem.IsEnabled(abyssal.Name) && Utils.SleepCheck("abyssal"))
+                            {
+                                abyssal.CastStun(target);
+                                Utils.Sleep(250 + Game.Ping, "abyssal");
+                            }
+
+                            if (manta != null && manta.CanBeCasted() && useItem.IsEnabled(manta.Name) && Utils.SleepCheck("manta"))
+                            {
+                                manta.UseAbility();
+                                Utils.Sleep(150 + Game.Ping, "manta");
+                            }
+
+                            if (bkb != null && bkb.CanBeCasted() && useItem.IsEnabled(bkb.Name) && Utils.SleepCheck("bkb") && me.Distance2D(target) <= 620)
+                            {
+                                bkb.UseAbility();
+                                Utils.Sleep(150 + Game.Ping, "bkb");
                             }
                         }
 
-                        // add armlet toggle
-                        // add mana check for ult
+                        var illusions = ObjectManager.GetEntities<Hero>().Where(f => f.IsAlive && f.IsControllable && f.Team == me.Team && f.IsIllusion && f.Modifiers.Any(y => y.Name != "modifier_kill")).ToList();
 
-
-                        //foreach (var spell in spells)
-                        //{
-                        //    if (spell.Name == "alchemist_acid_spray")
-                        //    {
-                        if (acid != null & acid.CanBeCasted() && useAbility.IsEnabled(acid.Name) && Utils.SleepCheck("acid") && me.Distance2D(target) <= acidrange)
+                        foreach (var illusion in illusions.TakeWhile(illusion => Utils.SleepCheck("illu_attacking" + illusion.Handle)))
                         {
-                            acid.UseAbility(target.Position);
-                            Utils.Sleep(150 + Game.Ping, "acid");
-                        }
-                        //    }
-
-                        //    if (spell.Name == "alchemist_chemical_rage")
-                        //    {
-                        if (rage != null && rage.CanBeCasted() && useAbility.IsEnabled(rage.Name) && Utils.SleepCheck("rage"))
-                        {
-                            rage.UseAbility();
-                            Utils.Sleep(250 + Game.Ping, "rage");
-                        }
-                        //}
-
-                        //    if (spell.Name == "item_blink")
-                        //    {
-                        if (blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && me.Distance2D(target) > 500 && me.Distance2D(target) <= 1170 && Utils.SleepCheck("blink"))
-                        {
-                            blink.UseAbility(target.Position);
-                            Utils.Sleep(250 + Game.Ping, "blink");
-
-                        }
-                        //    }
-                        //    if (spell.Name == "alchemist_unstable_concoction")
-                        //    {
-
-
-                        if (concModif != null && useAbility.IsEnabled(concoction.Name) && concModif.ElapsedTime < stunBrew && concModif.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange && !target.UnitState.HasFlag(UnitState.MagicImmune))
-                        {
-                            throwconc.UseAbility(target);
-
-                            Utils.Sleep(250 + Game.Ping, "throwconc");
+                            illusion.Attack(target);
+                            Utils.Sleep(350, "illu_attacking" + illusion.Handle);
                         }
 
-                        if (concoction != null && concoction.CanBeCasted() && useAbility.IsEnabled(concoction.Name) && Utils.SleepCheck("concoction"))
-                        {
-                            concoction.UseAbility();
-                          //  if (me.Distance2D(target) < 700 || !me.CanAttack())
-                       //     {
-                          //      me.Move(target.Predict(700));
-                         //   }
-                            
-                            Utils.Sleep(250 + Game.Ping, "concoction");
-                        }
-                        //    }
-
-                        //    // if (target.CanAttack) {
-                        //    if (spell.Name == "item_abyssal_blade")
-                        //    {
-                        if (abyssal != null && abyssal.CanBeCasted() && useItem.IsEnabled(abyssal.Name) && Utils.SleepCheck("abyssal"))
-                        {
-                            abyssal.CastStun(target);
-                            Utils.Sleep(250 + Game.Ping, "abyssal");
-                        }
-                        //    }
-                        //    // }
-                        //    if (spell.Name == "item_manta")
-                        //    {
-                        if (manta != null && manta.CanBeCasted() && useItem.IsEnabled(manta.Name) && Utils.SleepCheck("manta"))
-                        {
-                            manta.UseAbility();
-                            Utils.Sleep(150 + Game.Ping, "manta");
-                        }
-                        //    }
-
-
-                        //    if (spell.Name == "item_black_king_bar")
-                        //    {
-                        if (bkb != null && bkb.CanBeCasted() && useItem.IsEnabled(bkb.Name) && Utils.SleepCheck("bkb") && me.Distance2D(target) <= 620)
-                        {
-                            bkb.UseAbility();
-                            Utils.Sleep(150 + Game.Ping, "bkb");
-                        }
-                        
-                        
-                        //    }
-                    }
-                    var illusions = ObjectManager.GetEntities<Hero>().Where(f => f.IsAlive && f.IsControllable && f.Team == me.Team && f.IsIllusion && f.Modifiers.Any(y => y.Name != "modifier_kill")).ToList();
-
-                    foreach (var illusion in illusions.TakeWhile(illusion => Utils.SleepCheck("illu_attacking" + illusion.Handle)))
-                    {
-                        illusion.Attack(target);
-                        Utils.Sleep(350, "illu_attacking" + illusion.Handle);
                     }
                 }
+                else
+                {
+                    me.Move(Game.MousePosition);
+                }
             }
-            //}
 
             if (concModif != null && concModif.ElapsedTime >= stunBrew && Menu.Item("dodgeTog").GetValue<bool>())
             {
@@ -286,7 +283,6 @@ namespace AlchemistSharp
                     Utils.Sleep(250 + Game.Ping, "rage");
                 }
             }
-
         }
 
         private static void Game_OnWndProc(WndEventArgs args)
@@ -303,7 +299,7 @@ namespace AlchemistSharp
                     doCombo = false;
                 }
             }
-
         }
+
     }
 }
