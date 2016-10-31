@@ -275,10 +275,10 @@ namespace AlchemistSharp
 
                     }
                 }
-                else
+                /*else
                 {
                     me.Move(Game.MousePosition);
-                }
+                }*/
             }
 
             if (concModif != null && concModif.ElapsedTime >= stunBrew && Menu.Item("dodgeTog").GetValue<bool>())
