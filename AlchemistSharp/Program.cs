@@ -24,7 +24,7 @@ namespace AlchemistSharp
         private static bool useitemCheck;
         private static bool useabilityCheck;
         private static ParticleEffect targetParticle;
-        private static Dictionary<float, Orbwalker> orbwalkerDictionary = new Dictionary<float, Orbwalker>(); 
+        //private static Dictionary<float, Orbwalker> orbwalkerDictionary = new Dictionary<float, Orbwalker>(); 
 
         static void Main(string[] args)
         {
@@ -69,10 +69,10 @@ namespace AlchemistSharp
             if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Alchemist)
                 return;
             
-            if (ObjectManager.LocalHero == null)
+            /*if (ObjectManager.LocalHero == null)
             {
                 return;
-            }
+            }*/
 
             if (me == null)
                 return;
@@ -172,9 +172,9 @@ namespace AlchemistSharp
                         {
                             if (!Utils.SleepCheck("attacking"))
                             {
-                                {
-                                    //Orbwalking.Orbwalk(target, Game.Ping);
-                                 foreach (
+                                    Orbwalking.Orbwalk(target, Game.Ping);
+                                    Utils.Sleep(200, "attacking");
+                                 /*foreach (
                                         var unit in ObjectManager.GetEntities<Unit>().Where(x => x.IsAlive && x.IsVisible && x.IsControllable))
                                         {
                                         Orbwalker orbwalker;
@@ -185,8 +185,7 @@ namespace AlchemistSharp
                                             }
                                         orbwalker.OrbwalkOn(target);
                                         Utils.Sleep(200, "attacking");
-                                        }
-                                }
+                                        }*/
                             }
 
 
