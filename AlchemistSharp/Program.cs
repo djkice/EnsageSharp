@@ -118,8 +118,8 @@ namespace AlchemistSharp
 
             if (doCombo)
             {
-                var target = TargetSelector.ClosestToMouse(me);
-                //target = me.ClosestToMouseTarget(1000);
+                //var target = TargetSelector.ClosestToMouse(me);
+                target = me.ClosestToMouseTarget(1000);
 
                 if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
                 {
@@ -144,14 +144,14 @@ namespace AlchemistSharp
                     targetParticle.SetControlPoint(7, target.Position);
                 }
 
-                /*var canCancel = Orbwalking.CanCancelAnimation();
+                var canCancel = Orbwalking.CanCancelAnimation();
 
                 if (canCancel)
                 {
                     if (target != null && !target.IsVisible && !Orbwalking.AttackOnCooldown(target))
                     {
-                        //target = me.ClosestToMouseTarget();
-                        target = TargetSelector.ClosestToMouse(me);
+                        target = me.ClosestToMouseTarget();
+                        //target = TargetSelector.ClosestToMouse(me);
                     }
                     else if (target == null || !Orbwalking.AttackOnCooldown(target) && target.HasModifiers(new[] { "modifier_dazzle_shallow_grave", "modifier_item_blade_mail_reflect" }, false))
                     {
@@ -161,7 +161,7 @@ namespace AlchemistSharp
                             target = me.BestAATarget();
                         }
                     }
-                }*/
+                }
 
                 if (target != null && target.IsAlive && !target.IsInvul() && !target.IsIllusion)
                 {
