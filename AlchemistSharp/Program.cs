@@ -234,7 +234,7 @@ namespace AlchemistSharp
                                             me.Move(target.Predict(stunrange));
                                         }
                                   //      else
-                                        {
+                                  //      {
                                    //         me.Attack(target);
                                    //     }
                                     }
