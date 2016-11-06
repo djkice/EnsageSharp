@@ -233,10 +233,10 @@ namespace AlchemistSharp
                                         {
                                             me.Move(target.Predict(stunrange));
                                         }
-                                        else
+                                  //      else
                                         {
-                                            me.Attack(target);
-                                        }
+                                   //         me.Attack(target);
+                                   //     }
                                     }
                                     if (concModif.ElapsedTime < stunBrew && concModif.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange)
                                     {
