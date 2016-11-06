@@ -118,8 +118,8 @@ namespace AlchemistSharp
 
             if (doCombo)
             {
-                //var target = TargetSelector.ClosestToMouse(me);
-                target = me.ClosestToMouseTarget(1000);
+                var target = TargetSelector.ClosestToMouse(me);
+                //target = me.ClosestToMouseTarget(1000);
 
                 if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
                 {
@@ -234,16 +234,16 @@ namespace AlchemistSharp
                                             me.Move(target.Predict(stunrange));
                                         }
                                                         
-                                        if (!Utils.SleepCheck("attacking") && !invisModif && me.CanAttack())
-                                         {
-                                    Orbwalking.Orbwalk(target, Game.Ping);
-                                    Utils.Sleep(200, "attacking");
-                            }
+                                      //  if (!Utils.SleepCheck("attacking") && !invisModif && me.CanAttack())
+                                     //    {
+                                 //  Orbwalking.Orbwalk(target, Game.Ping);
+                                //    Utils.Sleep(200, "attacking");
+                            //}
                                         
-                                  //      else
-                                  //      {
-                                   //         me.Attack(target);
-                                   //     }
+                                        else
+                                        {
+                                           me.Attack(target);
+                                        }
                                     }
                                     if (concModif.ElapsedTime < stunBrew && concModif.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange)
                                     {
