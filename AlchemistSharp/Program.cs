@@ -233,6 +233,13 @@ namespace AlchemistSharp
                                         {
                                             me.Move(target.Predict(stunrange));
                                         }
+                                                        
+                                        if (!Utils.SleepCheck("attacking") && !invisModif && me.CanAttack())
+                                         {
+                                    Orbwalking.Orbwalk(target, Game.Ping);
+                                    Utils.Sleep(200, "attacking");
+                            }
+                                        
                                   //      else
                                   //      {
                                    //         me.Attack(target);
