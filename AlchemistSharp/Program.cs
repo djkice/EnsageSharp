@@ -24,7 +24,6 @@ namespace AlchemistSharp
         private static bool useitemCheck;
         private static bool useabilityCheck;
         private static ParticleEffect targetParticle;
-        //private static Dictionary<float, Orbwalker> orbwalkerDictionary = new Dictionary<float, Orbwalker>(); 
 
         static void Main(string[] args)
         {
@@ -69,11 +68,6 @@ namespace AlchemistSharp
             if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Alchemist)
                 return;
             
-            /*if (ObjectManager.LocalHero == null)
-            {
-                return;
-            }*/
-
             if (me == null)
                 return;
 
@@ -118,8 +112,8 @@ namespace AlchemistSharp
 
             if (doCombo)
             {
-                var target = TargetSelector.ClosestToMouse(me);
-                //target = me.ClosestToMouseTarget(1000);
+                //var target = TargetSelector.ClosestToMouse(me);
+                target = me.ClosestToMouseTarget(1000);
 
                 if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
                 {
@@ -174,20 +168,7 @@ namespace AlchemistSharp
                             {
                                     Orbwalking.Orbwalk(target, Game.Ping);
                                     Utils.Sleep(200, "attacking");
-                                 /*foreach (
-                                        var unit in ObjectManager.GetEntities<Unit>().Where(x => x.IsAlive && x.IsVisible && x.IsControllable))
-                                        {
-                                        Orbwalker orbwalker;
-                                            if (!orbwalkerDictionary.TryGetValue(unit.Handle, out orbwalker))
-                                            {
-                                                orbwalker = new Orbwalker(unit);
-                                                orbwalkerDictionary.Add(unit.Handle, orbwalker);
-                                            }
-                                        orbwalker.OrbwalkOn(target);
-                                        Utils.Sleep(200, "attacking");
-                                        }*/
                             }
-
 
                             if (acid != null & acid.CanBeCasted() && useAbility.IsEnabled(acid.Name) && Utils.SleepCheck("acid") && me.Distance2D(target) <= acidrange)
                             {
@@ -232,14 +213,7 @@ namespace AlchemistSharp
                                         if (!me.CanAttack())
                                         {
                                             me.Move(target.Predict(stunrange));
-                                        }
-                                                        
-                                      //  if (!Utils.SleepCheck("attacking") && !invisModif && me.CanAttack())
-                                     //    {
-                                 //  Orbwalking.Orbwalk(target, Game.Ping);
-                                //    Utils.Sleep(200, "attacking");
-                            //}
-                                        
+                                        }                                        
                                         else
                                         {
                                            me.Attack(target);
@@ -248,7 +222,7 @@ namespace AlchemistSharp
                                     if (concModif.ElapsedTime < stunBrew && concModif.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange)
                                     {
                                         throwconc.UseAbility(target);
-                                    }
+                                    } 
                                 }
                                 Utils.Sleep(250 + Game.Ping, "throwconc");
                             }
@@ -270,15 +244,21 @@ namespace AlchemistSharp
                                 bkb.UseAbility();
                                 Utils.Sleep(150 + Game.Ping, "bkb");
                             }
+                            
+                            else 
+                            {
+                                me.Move(target);
+                            }
+      
                         }
 
-                        /*var illusions = ObjectManager.GetEntities<Hero>().Where(f => f.IsAlive && f.IsControllable && f.Team == me.Team && f.IsIllusion && f.Modifiers.Any(y => y.Name != "modifier_kill")).ToList();
+                        var illusions = ObjectManager.GetEntities<Hero>().Where(f => f.IsAlive && f.IsControllable && f.Team == me.Team && f.IsIllusion && f.Modifiers.Any(y => y.Name != "modifier_kill")).ToList();
 
                         foreach (var illusion in illusions.TakeWhile(illusion => Utils.SleepCheck("illu_attacking" + illusion.Handle)))
                         {
                             illusion.Attack(target);
                             Utils.Sleep(350, "illu_attacking" + illusion.Handle);
-                        }*/
+                        }
 
                     }
                 }
