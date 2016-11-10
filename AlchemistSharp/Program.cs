@@ -245,10 +245,10 @@ namespace AlchemistSharp
                                 Utils.Sleep(150 + Game.Ping, "bkb");
                             }
                             
-                            else 
-                            {
-                                me.Move(target);
-                            }
+                           // else 
+                           // {
+                            //    me.Move(target);
+                          //  }
       
                         }
 
