@@ -112,7 +112,6 @@ namespace AlchemistSharp
 
             if (doCombo)
             {
-                Console.WriteLine(((target != null) ? target.Name : "no target found"));
                 //var target = TargetSelector.ClosestToMouse(me);
                 target = me.ClosestToMouseTarget(1000);
 
@@ -209,6 +208,11 @@ namespace AlchemistSharp
                                 }
                                 if (concModif != null && useAbility.IsEnabled(concoction.Name) && /* !target.UnitState.HasFlag(UnitState.MagicImmune)  && */ me.Distance2D(target) < 1000)
                                 {
+                                    if (!Utils.SleepCheck("attacking"))
+                                    {
+                                         Orbwalking.Orbwalk(target, Game.Ping);
+                                         Utils.Sleep(200, "attacking");
+                                      }
                                     if (me.Distance2D(target) > stunrange)
                                     {
                                         if (!me.CanAttack())
