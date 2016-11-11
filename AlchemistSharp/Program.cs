@@ -212,7 +212,7 @@ namespace AlchemistSharp
                                     {
                                          Orbwalking.Orbwalk(target, Game.Ping);
                                          Utils.Sleep(200, "attacking");
-                                      }
+                                    }
                                     if (me.Distance2D(target) > stunrange)
                                     {
                                         if (!me.CanAttack())
@@ -221,12 +221,7 @@ namespace AlchemistSharp
                                         }                                        
                                         else
                                         {
-                                          // me.Attack(target);
-                                                                                if (!Utils.SleepCheck("attacking"))
-                                    {
-                                         Orbwalking.Orbwalk(target, Game.Ping);
-                                         Utils.Sleep(200, "attacking");
-                                      }
+                                          me.Attack(target);
                                         }
                                     }
                                     if (concModif.ElapsedTime < stunBrew && concModif.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange)
