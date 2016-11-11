@@ -112,6 +112,7 @@ namespace AlchemistSharp
 
             if (doCombo)
             {
+                Console.WriteLine(((target != null) ? target.Name : "no target found"));"
                 //var target = TargetSelector.ClosestToMouse(me);
                 target = me.ClosestToMouseTarget(1000);
 
