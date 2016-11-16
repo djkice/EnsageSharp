@@ -373,7 +373,12 @@ namespace ODSharp
                 return;
             }
             me = ObjectManager.LocalHero;
+
+
             if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Obsidian_Destroyer) return;
+
+            if (astral == null)
+                astral = me.Spellbook.SpellW;
 
             var range = me.Spellbook.SpellW.CastRange;
 
