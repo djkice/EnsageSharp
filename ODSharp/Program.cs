@@ -55,7 +55,7 @@ namespace ODSharp
             ulti.AddItem(new MenuItem("autoUlt", "EnableAutoUlti").SetValue(true));
             ulti.AddItem(new MenuItem("Heel", "Min targets to ulti").SetValue(new Slider(2, 1, 5)));
             options.AddItem(new MenuItem("wks", "Astral Kill Steal").SetValue(true)).SetTooltip("If in range, it will steal kill with Astral imprisonment");
-            options.AddItem(new MenuItem("whs", "Auto Steal").SetValue(new KeyBind(45, KeyBindType.Toggle)).SetTooltip("If enemy hero in range will harras using Astral (closest enemy)"));
+            options.AddItem(new MenuItem("whs", "Astral Harras").SetValue(new KeyBind(45, KeyBindType.Toggle)).SetTooltip("If enemy hero in range will harras using Astral (closest enemy)"));
             options.AddItem(new MenuItem("autoUlt", "EnableAutoUlt").SetValue(true));
             options.AddItem(new MenuItem("hpdraw", "Draw HP Bar").SetValue(true).SetTooltip("Will show ulti damage on HP Bar"));
 
