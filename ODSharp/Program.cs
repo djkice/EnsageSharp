@@ -222,7 +222,7 @@ namespace ODSharp
 
                     if (blink != null && blink.CanBeCasted() && menuValue.IsEnabled(blink.Name) && me.Distance2D(target) > 500 && me.Distance2D(target) <= 1170 && Utils.SleepCheck("blink"))
                     {
-                        blink.UseAbility(target.Position);
+                        blink.UseAbility(target);
                         Utils.Sleep(250 + Game.Ping, "blink");
                     }
 
@@ -234,7 +234,7 @@ namespace ODSharp
 
                     if (veil != null && veil.CanBeCasted() && !target.IsMagicImmune() && !target.IsIllusion && Utils.SleepCheck("veil") && menuValue.IsEnabled(veil.Name))
                     {
-                        veil.UseAbility(target.Position);
+                        veil.UseAbility(target);
                         Utils.Sleep(50 + Game.Ping, "veil");
                     }
 
