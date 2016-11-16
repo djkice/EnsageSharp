@@ -222,7 +222,7 @@ namespace ODSharp
 
                     if (blink != null && blink.CanBeCasted() && menuValue.IsEnabled(blink.Name) && me.Distance2D(target) > 500 && me.Distance2D(target) <= 1170 && Utils.SleepCheck("blink"))
                     {
-                        blink.UseAbility(target);
+                        blink.UseAbility(target.Position);
                         Utils.Sleep(250 + Game.Ping, "blink");
                     }
 
@@ -234,7 +234,7 @@ namespace ODSharp
 
                     if (veil != null && veil.CanBeCasted() && !target.IsMagicImmune() && !target.IsIllusion && Utils.SleepCheck("veil") && menuValue.IsEnabled(veil.Name))
                     {
-                        veil.UseAbility(target);
+                        veil.UseAbility(target.Position);
                         Utils.Sleep(50 + Game.Ping, "veil");
                     }
 
@@ -249,6 +249,7 @@ namespace ODSharp
                     {
                         orchid.CastStun(target);
                         Utils.Sleep(250 + Game.Ping, "orchid");
+                        return;
                     }
 
 
@@ -256,6 +257,7 @@ namespace ODSharp
                     {
                         orchid.CastStun(target);
                         Utils.Sleep(250 + Game.Ping, "thorn");
+                        return;
                     }
 
                     if (me.Modifiers.ToList().Exists(x => x.Name == "modifier_item_hurricane_pike_range") && Utils.SleepCheck("orb"))
