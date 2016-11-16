@@ -227,9 +227,11 @@ namespace AlchemistSharp
                                     if (concModif.ElapsedTime < stunBrew && concModif.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange)
                                     {
                                         throwconc.UseAbility(target);
+                                        Utils.Sleep(250 + Game.Ping, "throwconc");
+                                        return;
                                     } 
                                 }
-                                Utils.Sleep(250 + Game.Ping, "throwconc");
+                                
                             }
 
                             if (abyssal != null && abyssal.CanBeCasted() && useItem.IsEnabled(abyssal.Name) && Utils.SleepCheck("abyssal"))
