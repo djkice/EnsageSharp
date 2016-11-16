@@ -76,7 +76,7 @@ namespace ODSharp
                 { "item_blink", true },
                 { "item_force_staff", true },
                 { "item_hurricane_pike", true },
-                { "veil_of_discord", true },
+                { "item_veil_of_discord", true },
                 { "item_bloodthorn", true }
 
             };
