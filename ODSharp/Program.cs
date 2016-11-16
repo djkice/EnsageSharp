@@ -128,7 +128,7 @@ namespace ODSharp
                 pike = me.FindItem("item_hurricane_pike");
 
             if (veil == null)
-                veil = me.FindItem("veil_of_discord");
+                veil = me.FindItem("item_veil_of_discord");
 
             if (thorn == null)
                 thorn = me.FindItem("item_bloodthorn");
@@ -219,24 +219,6 @@ namespace ODSharp
 
                     }
 
-                    if (me.Modifiers.ToList().Exists(x => x.Name == "modifier_item_hurricane_pike_range") && Utils.SleepCheck("orb"))
-
-                    {
-                        if (me.CanAttack() && me.CanCast())
-                        {
-
-                            if (orb != null && orb.IsValid && orb.CanBeCasted() && me.CanCast() && Utils.SleepCheck("orb") && !target.UnitState.HasFlag(UnitState.MagicImmune))
-                            {
-                                orb.UseAbility(target);
-                                Utils.Sleep(50, "orb");
-                            }
-                        }
-                        else {
-                            me.Attack(target);
-                            Utils.Sleep(150 + Game.Ping, "orb");
-                        }
-                    }
-
                     if (blink != null && blink.CanBeCasted() && menuValue.IsEnabled(blink.Name) && me.Distance2D(target) > 500 && me.Distance2D(target) <= 1170 && Utils.SleepCheck("blink"))
                     {
                         blink.UseAbility(target.Position);
@@ -274,6 +256,26 @@ namespace ODSharp
                         orchid.UseAbility(target);
                         Utils.Sleep(250 + Game.Ping, "thorn");
                     }
+
+                    if (me.Modifiers.ToList().Exists(x => x.Name == "modifier_item_hurricane_pike_range") && Utils.SleepCheck("orb"))
+
+                    {
+                        if (me.CanAttack() && me.CanCast())
+                        {
+
+                            if (orb != null && orb.IsValid && orb.CanBeCasted() && me.CanCast() && Utils.SleepCheck("orb") && !target.UnitState.HasFlag(UnitState.MagicImmune))
+                            {
+                                orb.UseAbility(target);
+                                Utils.Sleep(50, "orb");
+                            }
+                        }
+                        else {
+                            me.Attack(target);
+                            Utils.Sleep(150 + Game.Ping, "orb");
+                        }
+                    }
+
+
 
                     if (orb == null || orb.CanBeCasted() || !Utils.SleepCheck("orb")
                         || !Menu.Item("orbwalkk").GetValue<bool>() || !(targetDistance <= me.AttackRange))
