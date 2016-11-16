@@ -255,7 +255,7 @@ namespace ODSharp
 
                     if (thorn != null && thorn.IsValid && thorn.CanBeCasted() && Utils.SleepCheck("thorn") && menuValue.IsEnabled(thorn.Name))
                     {
-                        orchid.CastStun(target);
+                        thorn.CastStun(target);
                         Utils.Sleep(250 + Game.Ping, "thorn");
                         return;
                     }
