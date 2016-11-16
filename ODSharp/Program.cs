@@ -206,7 +206,7 @@ namespace ODSharp
                         Utils.Sleep(250 + Game.Ping, "blink");
                     }
 
-                    if (force != null && force.CanBeCasted() && menuValue.IsEnabled(force.Name) && Utils.SleepCheck("force") && targetDistance && targetDistance <= (570 + me.AttackRange))
+                    if (force != null && force.CanBeCasted() && menuValue.IsEnabled(force.Name) && Utils.SleepCheck("force") && targetDistance > 200 && targetDistance <= (570 + me.AttackRange))
                     {
                         force.UseAbility(me);
                         Utils.Sleep(250 + Game.Ping, "force");
