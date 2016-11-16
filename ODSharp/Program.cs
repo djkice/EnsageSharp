@@ -199,6 +199,20 @@ namespace ODSharp
                         Utils.Sleep(50 + Game.Ping, "atos");
                     }
 
+
+                    if (blink != null && blink.CanBeCasted() && menuValue.IsEnabled(blink.Name) && Utils.SleepCheck("blink") && targetDistance > 500 && targetDistance <= 1170)
+                    {
+                        blink.UseAbility(target.Position);
+                        Utils.Sleep(250 + Game.Ping, "blink");
+                    }
+
+                    if (force != null && force.CanBeCasted() && menuValue.IsEnabled(force.Name) && Utils.SleepCheck("force") && targetDistance && targetDistance <= (570 + me.AttackRange))
+                    {
+                        force.UseAbility(me);
+                        Utils.Sleep(250 + Game.Ping, "force");
+                    }
+
+
                     if (shiva != null && shiva.IsValid && shiva.CanBeCasted() && Utils.SleepCheck("shiva") && menuValue.IsEnabled(shiva.Name))
                     {
                         atos.UseAbility(target);
@@ -218,18 +232,6 @@ namespace ODSharp
                         pike.UseAbility(target);
                         Utils.Sleep(150 + Game.Ping, "pike");
 
-                    }
-
-                    if (blink != null && blink.CanBeCasted() && menuValue.IsEnabled(blink.Name) && me.Distance2D(target) > 500 && me.Distance2D(target) <= 1170 && Utils.SleepCheck("blink"))
-                    {
-                        blink.UseAbility(target.Position);
-                        Utils.Sleep(250 + Game.Ping, "blink");
-                    }
-
-                    if (force != null && force.CanBeCasted() && menuValue.IsEnabled(force.Name) && me.Distance2D(target) > 200 && me.Distance2D(target) <= (570 + me.AttackRange) && Utils.SleepCheck("force"))
-                    {
-                        force.UseAbility(me);
-                        Utils.Sleep(250 + Game.Ping, "force");
                     }
 
                     if (veil != null && veil.CanBeCasted() && !target.IsMagicImmune() && !target.IsIllusion && Utils.SleepCheck("veil") && menuValue.IsEnabled(veil.Name))
