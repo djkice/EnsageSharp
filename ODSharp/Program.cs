@@ -206,6 +206,7 @@ namespace ODSharp
                     }
 
                     if (!(targetDistance <= me.AttackRange)) return;
+
                     if (bkb != null && bkb.IsValid && bkb.CanBeCasted() && Utils.SleepCheck("bkb") && menuValue.IsEnabled(bkb.Name))
                     {
                         bkb.UseAbility();
@@ -225,7 +226,7 @@ namespace ODSharp
                         Utils.Sleep(250 + Game.Ping, "blink");
                     }
 
-                    if (force != null && force.CanBeCasted() && menuValue.IsEnabled(force.Name) && me.Distance2D(target) > 200 && me.Distance2D(target) <= 570 && Utils.SleepCheck("force"))
+                    if (force != null && force.CanBeCasted() && menuValue.IsEnabled(force.Name) && me.Distance2D(target) > 200 && me.Distance2D(target) <= (570 + me.AttackRange) && Utils.SleepCheck("force"))
                     {
                         force.UseAbility(me);
                         Utils.Sleep(250 + Game.Ping, "force");
@@ -246,14 +247,14 @@ namespace ODSharp
 
                     if (orchid != null && orchid.IsValid && orchid.CanBeCasted() && Utils.SleepCheck("orchid") && menuValue.IsEnabled(orchid.Name))
                     {
-                        orchid.UseAbility(target);
+                        orchid.CastStun(target);
                         Utils.Sleep(250 + Game.Ping, "orchid");
                     }
 
 
                     if (thorn != null && thorn.IsValid && thorn.CanBeCasted() && Utils.SleepCheck("thorn") && menuValue.IsEnabled(thorn.Name))
                     {
-                        orchid.UseAbility(target);
+                        orchid.CastStun(target);
                         Utils.Sleep(250 + Game.Ping, "thorn");
                     }
 
