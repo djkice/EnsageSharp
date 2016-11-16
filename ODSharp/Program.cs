@@ -20,13 +20,13 @@ namespace ODSharp
         private static Item bkb, hex, orchid, shiva, atos, blink, force, veil, pike, thorn;
         private static readonly Menu Menu = new Menu("ODSharp", "odsharp", true, "npc_dota_hero_obsidian_destroyer", true);
         private static Hero me, target;
-        private static Creep LastAttacked;
+        //private static Creep LastAttacked;
         private static float scaleX, scaleY;
         private static bool Combo;
-        private static bool HPBar;
+        //private static bool HPBar;
         private static StringList Targeting;
-        private static bool KillSteal;
-        public static bool AutoAttackDisable;
+        //private static bool KillSteal;
+        //public static bool AutoAttackDisable;
         private static AbilityToggler menuValue;
         private static bool menuvalueSet;
         private static readonly int[] orbb = new int[5] { 0, 1, 2, 3, 4 };
@@ -90,7 +90,7 @@ namespace ODSharp
             if (!Game.IsInGame || Game.IsPaused || Game.IsWatchingGame)
                 return;
 
-            me = ObjectMgr.LocalHero;
+            me = ObjectManager.LocalHero;
             if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Obsidian_Destroyer) return;
 
             if (astral == null)
@@ -214,12 +214,12 @@ namespace ODSharp
 
                     if (pike != null && pike.CanBeCasted() && menuValue.IsEnabled(pike.Name) && Utils.SleepCheck("pike"))
                     {
-                        hurricane.UseAbility(target);
+                        pike.UseAbility(target);
                         Utils.Sleep(150 + Game.Ping, "pike");
 
                     }
 
-                    if (me.Modifiers.ToList().Exists(xk => x.Name == "modifier_item_hurricane_pike_range") && Utils.SleepCheck("orb"))
+                    if (me.Modifiers.ToList().Exists(x => x.Name == "modifier_item_hurricane_pike_range") && Utils.SleepCheck("orb"))
 
                     {
                         if (me.CanAttack() && me.CanCast())
@@ -312,7 +312,7 @@ namespace ODSharp
             {
                 return;
             }
-            me = ObjectMgr.LocalHero;
+            me = ObjectManager.LocalHero;
             if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Obsidian_Destroyer) return;
 
             var astrallvl = me.Spellbook.SpellW.Level;
@@ -322,7 +322,7 @@ namespace ODSharp
             {
                 if (astral.CanBeCasted() && me.Mana > astral.ManaCost)
                 {
-                    var enemy = ObjectMgr.GetEntities<Hero>().Where(e => e.Team != me.Team && e.IsAlive && e.IsVisible && !e.IsIllusion && !e.UnitState.HasFlag(UnitState.MagicImmune) && me.Distance2D(e) < range).ToList();
+                    var enemy = ObjectManager.GetEntities<Hero>().Where(e => e.Team != me.Team && e.IsAlive && e.IsVisible && !e.IsIllusion && !e.UnitState.HasFlag(UnitState.MagicImmune) && me.Distance2D(e) < range).ToList();
                     foreach (var v in enemy)
                     {
                         var damage = Math.Floor((wDamage[astrallvl] * (1 - v.MagicDamageResist)) - (v.HealthRegeneration * 5));
@@ -343,7 +343,7 @@ namespace ODSharp
             {
                 return;
             }
-            me = ObjectMgr.LocalHero;
+            me = ObjectManager.LocalHero;
             if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Obsidian_Destroyer) return;
 
             var range = me.Spellbook.SpellW.CastRange;
@@ -352,7 +352,7 @@ namespace ODSharp
             {
                 if (astral.CanBeCasted() && me.Mana > astral.ManaCost)
                 {
-                    var enemy = ObjectMgr.GetEntities<Hero>().Where(e => e.Team != me.Team && e.IsAlive && e.IsVisible && !e.IsIllusion && !e.UnitState.HasFlag(UnitState.MagicImmune) && me.Distance2D(e) < range).ToList();
+                    var enemy = ObjectManager.GetEntities<Hero>().Where(e => e.Team != me.Team && e.IsAlive && e.IsVisible && !e.IsIllusion && !e.UnitState.HasFlag(UnitState.MagicImmune) && me.Distance2D(e) < range).ToList();
                     foreach (var v in enemy)
                     {
                         if (me.Distance2D(v) < range)
@@ -373,13 +373,13 @@ namespace ODSharp
             {
                 return;
             }
-            me = ObjectMgr.LocalHero;
+            me = ObjectManager.LocalHero;
             if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Obsidian_Destroyer) return;
 
 
             var ultLvl = me.Spellbook.SpellR.Level;
             var enemy =
-                ObjectMgr.GetEntities<Hero>()
+                ObjectManager.GetEntities<Hero>()
                     .Where(y => y.Team != me.Team && y.IsAlive && y.IsVisible && !y.IsIllusion)
                     .ToList();
             foreach (var z in enemy)
@@ -457,12 +457,12 @@ namespace ODSharp
                 return;
             }
 
-            me = ObjectMgr.LocalHero;
+            me = ObjectManager.LocalHero;
             if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Obsidian_Destroyer) return;
 
             var ultLvl = me.Spellbook.SpellR.Level;
             var enemy =
-                ObjectMgr.GetEntities<Hero>()
+                ObjectManager.GetEntities<Hero>()
                     .Where(y => y.Team != me.Team && y.IsAlive && y.IsVisible && !y.IsIllusion)
                     .ToList();
 
@@ -509,7 +509,7 @@ namespace ODSharp
                 }
                 catch (Exception e)
                 {
-                    //Console.WriteLine(e.Message);
+                //    //Console.WriteLine(e.Message);
                 }
             }
         }
@@ -521,12 +521,12 @@ namespace ODSharp
                 return;
             }
 
-            me = ObjectMgr.LocalHero;
+            me = ObjectManager.LocalHero;
             if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Obsidian_Destroyer) return;
 
             var ultLvl = me.Spellbook.SpellR.Level;
             var enemy =
-                ObjectMgr.GetEntities<Hero>()
+                ObjectManager.GetEntities<Hero>()
                     .Where(y => y.Team != me.Team && y.IsAlive && y.IsVisible && !y.IsIllusion)
                     .ToList();
 
