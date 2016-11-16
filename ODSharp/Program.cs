@@ -33,6 +33,7 @@ namespace ODSharp
         private static readonly int[] ult = { 0, 8, 9, 10 };
         private static readonly int[] wDamage = new int[5] { 0, 75, 150, 225, 300 };
         private static readonly int[] ultRange = { 0, 375, 475, 575 };
+        private static ParticleEffect targetParticle;
 
 
         private static void Main()
@@ -172,6 +173,27 @@ namespace ODSharp
                 {
                     target = null;
                 }
+
+
+
+                if (targetParticle == null && target != null)
+                {
+                    targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
+                }
+
+                if ((target == null || !target.IsVisible || !target.IsAlive) && targetParticle != null)
+                {
+                    targetParticle.Dispose();
+                    targetParticle = null;
+                }
+
+                if (target != null && targetParticle != null)
+                {
+                    targetParticle.SetControlPoint(2, me.Position);
+                    targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
+                    targetParticle.SetControlPoint(7, target.Position);
+                }
+
                 var canCancel = Orbwalking.CanCancelAnimation();
                 if (canCancel)
                 {
