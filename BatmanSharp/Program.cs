@@ -192,7 +192,7 @@ namespace BatmanSharp
 
                         if (flamebreak != null & flamebreak.CanBeCasted() && useAbility.IsEnabled(flamebreak.Name) && Utils.SleepCheck("flamebreak") && targetDistance <= frange)
                         {
-                            flamebreak.UseAbility(target.Position);
+                            flamebreak.UseAbility(target);
                             Utils.Sleep(170 + Game.Ping, "flamebreak");
                         }
                     }
@@ -264,7 +264,7 @@ namespace BatmanSharp
                     }
                     else if (!me.HasModifier("modifier_batrider_flaming_lasso") && me.IsAlive)
                     {
-                            me.Move(target.Predict(lrange));
+                            me.Move(target.Position);
                     }
 
                 }
@@ -328,7 +328,7 @@ namespace BatmanSharp
                         if (v.Health < damage && me.Distance2D(v) < range)
                         {
                             flamebreak.UseAbility(v.Position);
-                            Utils.Sleep(200 + Game.Ping, "killstealW");
+                            Utils.Sleep(170 + Game.Ping, "killstealW");
                         }
                     }
                 }
