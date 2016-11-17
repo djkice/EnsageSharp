@@ -74,7 +74,7 @@ namespace AxeSharp
                 hunger = me.Spellbook.SpellW;
 
             if (culling == null)
-                hunger = me.Spellbook.SpellR;
+                culling = me.Spellbook.SpellR;
 
             if (blink == null)
                 blink = me.FindItem("item_blink");
