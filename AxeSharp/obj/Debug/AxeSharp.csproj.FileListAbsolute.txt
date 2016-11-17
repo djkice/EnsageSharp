@@ -1,0 +1,12 @@
+C:\Users\Kice\Desktop\AxeSharp\bin\Release\FrenziedAxe.exe.config
+C:\Users\Kice\Desktop\AxeSharp\bin\Release\FrenziedAxe.exe
+C:\Users\Kice\Desktop\AxeSharp\bin\Release\FrenziedAxe.pdb
+C:\Users\Kice\Desktop\AxeSharp\bin\Release\Ensage.Common.dll
+C:\Users\Kice\Desktop\AxeSharp\bin\Release\Ensage.dll
+C:\Users\Kice\Desktop\AxeSharp\bin\Release\Newtonsoft.Json.dll
+C:\Users\Kice\Desktop\AxeSharp\bin\Release\SharpDX.Direct3D9.dll
+C:\Users\Kice\Desktop\AxeSharp\bin\Release\SharpDX.dll
+C:\Users\Kice\Desktop\AxeSharp\bin\Release\Ensage.Common.pdb
+C:\Users\Kice\Desktop\AxeSharp\obj\Debug\AxeSharp.csprojResolveAssemblyReference.cache
+C:\Users\Kice\Desktop\AxeSharp\obj\Debug\FrenziedAxe.exe
+C:\Users\Kice\Desktop\AxeSharp\obj\Debug\FrenziedAxe.pdb
