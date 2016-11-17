@@ -197,7 +197,7 @@ namespace BatmanSharp
                         }
                     }
                 }
-                else if (!me.HasModifier("modifier_batrider_flaming_lasso"))
+               else
                 {
                     me.Move(Game.MousePosition);
                 }
@@ -206,8 +206,7 @@ namespace BatmanSharp
             {
                 if (me.IsAlive)
                 {
-                    target = lassoTarget;
-                    var targetDistance = me.Distance2D(target);
+                    lassoTarget = target;
 
                     if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
                     {
@@ -233,6 +232,7 @@ namespace BatmanSharp
 
                     if (lasso != null & lasso.CanBeCasted() && useAbility.IsEnabled(lasso.Name) && Utils.SleepCheck("lasso"))
                     {
+                        var targetDistance = me.Distance2D(target);
                         if (blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && targetDistance > 500 && targetDistance <= (1170 + lrange) && Utils.SleepCheck("blink"))
                         {
                             blink.UseAbility(target.Position);
@@ -255,9 +255,8 @@ namespace BatmanSharp
                             lasso.UseAbility(target);
                         Utils.Sleep(600 + Game.Ping, "lasso");
                     }
-                    else
+                    else if (!me.HasModifier("modifier_batrider_flaming_lasso"))
                     {
-                        if (me.HasModifier(""))
                         me.Move(target.Predict(lrange));
                     }
 
