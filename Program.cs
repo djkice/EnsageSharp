@@ -94,29 +94,6 @@ namespace AxeSharp
                 useabilityCheck = true;
             }
 
-            if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
-            {
-                target = null;
-            }
-
-            if (targetParticle == null && target != null)
-            {
-                targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
-            }
-
-            if ((target == null || !target.IsVisible || !target.IsAlive) && targetParticle != null)
-            {
-                targetParticle.Dispose();
-                targetParticle = null;
-            }
-
-            if (target != null && targetParticle != null)
-            {
-                targetParticle.SetControlPoint(2, me.Position);
-                targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
-                targetParticle.SetControlPoint(7, target.Position);
-            }
-
 
             //add targetting, combo and orbwalk
 
@@ -176,6 +153,24 @@ namespace AxeSharp
                         }
                     }
                 }
+            }
+
+            if (targetParticle == null && target != null)
+            {
+                targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
+            }
+
+            if ((target == null || !target.IsVisible || !target.IsAlive) && targetParticle != null)
+            {
+                targetParticle.Dispose();
+                targetParticle = null;
+            }
+
+            if (target != null && targetParticle != null)
+            {
+                targetParticle.SetControlPoint(2, me.Position);
+                targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
+                targetParticle.SetControlPoint(7, target.Position);
             }
 
         }
