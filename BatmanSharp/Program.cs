@@ -82,7 +82,6 @@ namespace BatmanSharp
 
             if (firefly == null)
                 flamebreak = me.Spellbook.SpellE;
-            var ffrange = me.Spellbook.SpellE.CastRange;
 
             if (lasso == null)
                 lasso = me.Spellbook.SpellR;
@@ -178,23 +177,25 @@ namespace BatmanSharp
                             Utils.Sleep(250 + Game.Ping, "force");
                         }
 
+                        if (firefly != null & firefly.CanBeCasted() && useAbility.IsEnabled(firefly.Name) && Utils.SleepCheck("firefly"))
+                        {
+                            firefly.UseAbility();
+                            Utils.Sleep(250 + Game.Ping, "firefly");
+                        }
+
+                        if (flamebreak != null & flamebreak.CanBeCasted() && useAbility.IsEnabled(flamebreak.Name) && Utils.SleepCheck("flamebreak") && targetDistance <= frange)
+                        {
+                            flamebreak.UseAbility(target.Position);
+                            Utils.Sleep(170 + Game.Ping, "flamebreak");
+
+                        }
+
                         if (napalm != null & napalm.CanBeCasted() && useAbility.IsEnabled(napalm.Name) && Utils.SleepCheck("napalm") && targetDistance <= nrange)
                         {
                             napalm.UseAbility(target.Position);
                             Utils.Sleep(100 + Game.Ping, "napalm");
                         }
 
-                        if (firefly != null & firefly.CanBeCasted() && useAbility.IsEnabled(firefly.Name) && Utils.SleepCheck("firefly") && targetDistance <= ffrange)
-                        {
-                            firefly.UseAbility();
-                            Utils.Sleep(400 + Game.Ping, "firefly");
-                        }
-
-                        if (flamebreak != null & flamebreak.CanBeCasted() && useAbility.IsEnabled(flamebreak.Name) && Utils.SleepCheck("flamebreak") && targetDistance <= frange)
-                        {
-                            flamebreak.UseAbility(target);
-                            Utils.Sleep(170 + Game.Ping, "flamebreak");
-                        }
                     }
                 }
                else
