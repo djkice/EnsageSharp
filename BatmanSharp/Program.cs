@@ -186,7 +186,6 @@ namespace BatmanSharp
                         if (flamebreak != null & flamebreak.CanBeCasted() && useAbility.IsEnabled(flamebreak.Name) && Utils.SleepCheck("flamebreak") && targetDistance <= frange)
                         {
                             flamebreak.UseAbility(target.Position);
-                            flamebreak.CastStun(target);
                             Utils.Sleep(170 + Game.Ping, "flamebreak");
 
                         }
