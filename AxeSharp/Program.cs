@@ -20,7 +20,11 @@ namespace AxeSharp
         private const double agroDelay = 0.4;
 
         private static AbilityToggler useAbility;
+
         private static Item blink, bladeMail;
+
+        private static bool useitemCheck;
+        private static bool useabilityCheck;
 
         private static Hero me, target, killedTarget;
         private static Ability call, hunger, culling;
@@ -34,7 +38,7 @@ namespace AxeSharp
 
             var useAbilities = new Dictionary<string, bool>
             {
-              {"item_blink", true}, {"tem_blade_mail", true }
+              {"item_blink", true}, {"item_blade_mail", true }
             };
 
             var useItems = new Dictionary<string, bool>
@@ -70,35 +74,24 @@ namespace AxeSharp
                 hunger = me.Spellbook.SpellW;
 
             if (culling == null)
-                hunger = me.Spellbook.SpellR;
+                culling = me.Spellbook.SpellR;
 
             if (blink == null)
                 blink = me.FindItem("item_blink");
 
             if (blink == null)
-                blink = me.FindItem("tem_blade_mail");
+                blink = me.FindItem("item_blade_mail");
 
-            if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
+            if (!useitemCheck)
             {
-                target = null;
+                useItem = Menu.Item("Items").GetValue<AbilityToggler>();
+                useitemCheck = true;
             }
 
-            if (targetParticle == null && target != null)
+            if (!useabilityCheck)
             {
-                targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
-            }
-
-            if ((target == null || !target.IsVisible || !target.IsAlive) && targetParticle != null)
-            {
-                targetParticle.Dispose();
-                targetParticle = null;
-            }
-
-            if (target != null && targetParticle != null)
-            {
-                targetParticle.SetControlPoint(2, me.Position);
-                targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
-                targetParticle.SetControlPoint(7, target.Position);
+                useAbility = Menu.Item("Abilities").GetValue<AbilityToggler>();
+                useabilityCheck = true;
             }
 
 
@@ -107,6 +100,7 @@ namespace AxeSharp
             if (culling != null && culling.Level > 0)
             {
                 target = GetLowHpHeroInDistance(me, blinkRadius);
+                Console.WriteLine(target);
 
                 //check for blink
                 if (target != null && me.Health > 400 && blink != null && blink.CanBeCasted() && Utils.SleepCheck("blink"))
@@ -118,7 +112,7 @@ namespace AxeSharp
                 }
 
                 target = GetLowHpHeroInDistance(me, 300);
-
+                Console.WriteLine(target);
                 //check for ult
                 if (target != null && culling != null && (culling.Level > 0) && culling.CanBeCasted() && Utils.SleepCheck("culling"))
                 {
@@ -136,6 +130,7 @@ namespace AxeSharp
             killedTarget = target;
 
             target = GetHeroInAgro(me);
+            Console.WriteLine(target);
 
             if (target != null && !target.Equals(killedTarget))
             {
@@ -160,6 +155,24 @@ namespace AxeSharp
                         }
                     }
                 }
+            }
+
+            if (targetParticle == null && target != null)
+            {
+                targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
+            }
+
+            if ((target == null || !target.IsVisible || !target.IsAlive) && targetParticle != null)
+            {
+                targetParticle.Dispose();
+                targetParticle = null;
+            }
+
+            if (target != null && targetParticle != null)
+            {
+                targetParticle.SetControlPoint(2, me.Position);
+                targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
+                targetParticle.SetControlPoint(7, target.Position);
             }
 
         }
