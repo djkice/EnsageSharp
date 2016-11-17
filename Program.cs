@@ -206,11 +206,8 @@ namespace BatmanSharp
             {
                 if (me.IsAlive)
                 {
-                    if (lassoTarget != null)
-                    {
-                        target = lassoTarget;
-                    }
-
+                    target = lassoTarget;
+                    
                     var targetDistance = me.Distance2D(target);
 
                     if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
@@ -295,6 +292,7 @@ namespace BatmanSharp
                 }
                 else
                 {
+                    lassoTarget = null;
                     doCombo = false;
                     doUlt = false;
                 }
