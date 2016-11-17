@@ -266,10 +266,6 @@ namespace BatmanSharp
                     {
                             me.Move(target.Predict(lrange));
                     }
-                    else
-                    {
-                        return;
-                    }
 
                 }
             }
@@ -326,9 +322,9 @@ namespace BatmanSharp
                     var enemy = ObjectManager.GetEntities<Hero>().Where(e => e.Team != me.Team && e.IsAlive && e.IsVisible && !e.IsIllusion && !e.UnitState.HasFlag(UnitState.MagicImmune) && me.Distance2D(e) < range).ToList();
                     foreach (var v in enemy)
                     {
-                        var damage = Math.Floor((wDamage[flamebreaklvl] * (1 - v.MagicDamageResist)) - (v.HealthRegeneration * 5));
+                        //var damage = Math.Floor((wDamage[flamebreaklvl] * (1 - v.MagicDamageResist)) - (v.HealthRegeneration * 5));
 
-                        //var damage = wDamage[flamebreaklvl];
+                        var damage = wDamage[flamebreaklvl];
                         if (v.Health < damage && me.Distance2D(v) < range)
                         {
                             flamebreak.UseAbility(v.Position);
