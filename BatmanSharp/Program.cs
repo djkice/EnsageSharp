@@ -259,13 +259,16 @@ namespace BatmanSharp
                         {
                             lasso.UseAbility(target);
                             Utils.Sleep(600 + Game.Ping, "lasso");
-                            target = null;
                         }
 
                     }
-                    else if (!me.HasModifier("modifier_batrider_flaming_lasso") && me.IsAlive && target != null)
+                    else if (!me.HasModifier("modifier_batrider_flaming_lasso") && me.IsAlive)
                     {
                             me.Move(target.Predict(lrange));
+                    }
+                    else
+                    {
+                        return;
                     }
 
                 }
@@ -293,7 +296,6 @@ namespace BatmanSharp
                 }
                 else
                 {
-                    lassoTarget = null;
                     doCombo = false;
                     doUlt = false;
                 }
