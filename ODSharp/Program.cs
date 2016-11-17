@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -207,8 +207,8 @@ namespace ODSharp
                 {
 
                     var targetDistance = me.Distance2D(target);
-                    var pikeTarget; 
-                    
+                    var pikeTarget;
+
                     if (me.CanAttack() && me.CanCast())
 
                         if (orb != null && orb.IsValid && orb.CanBeCasted() && me.CanCast() && Utils.SleepCheck("orb") && !target.UnitState.HasFlag(UnitState.MagicImmune))
@@ -291,18 +291,20 @@ namespace ODSharp
                     {
                         if (me.CanAttack() && me.CanCast())
                         {
-                            if (pikeTarget != null && pikeTarget.IsAlive && !pikeTarget.IsInvul() && !pikeTarget.IsIllusion && pikeTarget.IsVisible) {
-                                
-                            if (orb != null && orb.IsValid && orb.CanBeCasted() && me.CanCast() && Utils.SleepCheck("orb") && !pikeTarget.UnitState.HasFlag(UnitState.MagicImmune))
+                            if (pikeTarget != null && pikeTarget.IsAlive && !pikeTarget.IsInvul() && !pikeTarget.IsIllusion && pikeTarget.IsVisible)
                             {
-                                orb.UseAbility(pikeTarget);
-                                Utils.Sleep(50, "orb");
+
+                                if (orb != null && orb.IsValid && orb.CanBeCasted() && me.CanCast() && Utils.SleepCheck("orb") && !pikeTarget.UnitState.HasFlag(UnitState.MagicImmune))
+                                {
+                                    orb.UseAbility(pikeTarget);
+                                    Utils.Sleep(50, "orb");
+                                }
+
+                                else {
+                                    me.Attack(pikeTarget);
+                                    Utils.Sleep(150 + Game.Ping, "orb");
+                                }
                             }
-                        }
-                        else {
-                            me.Attack(pikeTarget);
-                            Utils.Sleep(150 + Game.Ping, "orb");
-                        }
                         }
                     }
 
@@ -547,7 +549,7 @@ namespace ODSharp
                 }
                 catch (Exception e)
                 {
-                //    //Console.WriteLine(e.Message);
+                    //    //Console.WriteLine(e.Message);
                 }
             }
         }
