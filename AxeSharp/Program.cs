@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AxeSharp
 {
-    class Program
+    internal class Program
     {
         private static readonly Menu Menu = new Menu("AxeSharp", "axesharp", true, "npc_dota_hero_axe", true);
 
@@ -20,8 +20,9 @@ namespace AxeSharp
         private const double agroDelay = 0.4;
 
         private static AbilityToggler useAbility;
+        private static AbilityToggler useItem;
 
-        private static Item blink, bladeMail;
+        private static Item blink, blademail;
 
         private static bool useitemCheck;
         private static bool useabilityCheck;
@@ -34,6 +35,7 @@ namespace AxeSharp
         {
 
             Game.OnUpdate += Game_OnUpdate;
+            Game.OnUpdate += HungerHarras;
             Console.WriteLine("AxeSharp loaded!");
 
             var useAbilities = new Dictionary<string, bool>
@@ -48,19 +50,18 @@ namespace AxeSharp
 
             Menu.AddItem(new MenuItem("Items", "Use Items:").SetValue(new AbilityToggler(useItems)));
             Menu.AddItem(new MenuItem("Abilities", "Use Abilities:").SetValue(new AbilityToggler(useAbilities)));
-
+            Menu.AddItem(new MenuItem("hhs", "Hunger Harras").SetValue(new KeyBind(45, KeyBindType.Toggle)).SetTooltip("Harras with Battle Hunger)"));
             Menu.AddToMainMenu();
 
         }
 
         private static void Game_OnUpdate(EventArgs args)
         {
-            Hero me = ObjectManager.LocalHero;
+            me = ObjectManager.LocalHero;
 
             if (!Game.IsInGame || Game.IsPaused || Game.IsWatchingGame)
                 return;
 
-            
             if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Axe)
                 return;
 
@@ -79,8 +80,8 @@ namespace AxeSharp
             if (blink == null)
                 blink = me.FindItem("item_blink");
 
-            if (blink == null)
-                blink = me.FindItem("item_blade_mail");
+            if (blademail == null)
+                blademail = me.FindItem("item_blade_mail");
 
             if (!useitemCheck)
             {
@@ -148,7 +149,7 @@ namespace AxeSharp
                     {
                         if ((call.CooldownLength - call.Cooldown) < 3.2)
                         {
-                            if (!useAbilityAndGetResult(bladeMail, "bladeMail", null, false, me))
+                            if (!useAbilityAndGetResult(blademail, "blademail", null, false, me))
                             {
                                 return;
                             }
@@ -323,6 +324,40 @@ namespace AxeSharp
 
             return target;
 
+        }
+
+        public static void HungerHarras(EventArgs args)
+        {
+            if (!Game.IsInGame || Game.IsPaused || Game.IsWatchingGame)
+            {
+                return;
+            }
+            me = ObjectManager.LocalHero;
+
+
+            if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Axe) return;
+
+            if (hunger == null)
+                hunger = me.Spellbook.SpellW;
+
+            var range = me.Spellbook.SpellW.CastRange;
+
+            if (Utils.SleepCheck("hungerHarras") && Menu.Item("hhs").GetValue<KeyBind>().Active)
+            {
+                if (hunger.CanBeCasted() && me.Mana > hunger.ManaCost)
+                {
+                    var enemy = ObjectManager.GetEntities<Hero>().Where(e => e.Team != me.Team && e.IsAlive && e.IsVisible && !e.IsIllusion && !e.UnitState.HasFlag(UnitState.MagicImmune) && me.Distance2D(e) < range).ToList();
+                    foreach (var v in enemy)
+                    {
+                        if (me.Distance2D(v) < range)
+                        {
+                            hunger.UseAbility(v);
+                            Utils.Sleep(300, "hungerHarras");
+                        }
+                    }
+                }
+
+            }
         }
 
     }
