@@ -206,11 +206,8 @@ namespace BatmanSharp
             {
                 if (me.IsAlive)
                 {
-                    if (lassoTarget != null)
-                    {
-                        target = lassoTarget;
-                    }
-
+                    target = lassoTarget;
+                    
                     var targetDistance = me.Distance2D(target);
 
                     if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
@@ -238,6 +235,14 @@ namespace BatmanSharp
                     if (lasso != null & lasso.CanBeCasted() && useAbility.IsEnabled(lasso.Name) && Utils.SleepCheck("lasso"))
                     {
 
+                        if (force != null && force.CanBeCasted() && useItem.IsEnabled(force.Name) && Utils.SleepCheck("force") && blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && Utils.SleepCheck("blink") && targetDistance > 1170 && targetDistance <= (1760 + lrange))
+                        {
+                            blink.UseAbility(target.Position);
+                            force.UseAbility(me);
+                            Utils.Sleep(250 + Game.Ping, "blink");
+                            Utils.Sleep(250 + Game.Ping, "force");
+                        }
+
                         if (blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && targetDistance > 500 && targetDistance <= (1170 + lrange) && Utils.SleepCheck("blink"))
                         {
                             blink.UseAbility(target.Position);
@@ -249,24 +254,18 @@ namespace BatmanSharp
                             force.UseAbility(me);
                             Utils.Sleep(250 + Game.Ping, "force");
                         }
-                        if (force != null && force.CanBeCasted() && useItem.IsEnabled(force.Name) && Utils.SleepCheck("force") && blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && Utils.SleepCheck("blink") && targetDistance > 1170 && targetDistance <= (1760 + lrange))
-                        {
-                            blink.UseAbility(target.Position);
-                            force.UseAbility(me);
-                            Utils.Sleep(250 + Game.Ping, "blink");
-                            Utils.Sleep(250 + Game.Ping, "force");
-                        }
+
                         if (targetDistance <= lrange)
                         {
                             lasso.UseAbility(target);
                             Utils.Sleep(600 + Game.Ping, "lasso");
+                            target = null;
                         }
 
                     }
-                    else if (!me.HasModifier("modifier_batrider_flaming_lasso"))
+                    else if (!me.HasModifier("modifier_batrider_flaming_lasso") && me.IsAlive && target != null)
                     {
                             me.Move(target.Predict(lrange));
-
                     }
 
                 }
@@ -285,11 +284,16 @@ namespace BatmanSharp
                 }
                 else if (Menu.Item("ultKey").GetValue<KeyBind>().Active)
                 {
-                    lassoTarget = TargetSelector.ClosestToMouse(me);
-                    doUlt = true;
+                    if (me.IsAlive)
+                    {
+                        lassoTarget = TargetSelector.ClosestToMouse(me);
+                        doUlt = true;
+
+                    }
                 }
                 else
                 {
+                    lassoTarget = null;
                     doCombo = false;
                     doUlt = false;
                 }
@@ -306,8 +310,12 @@ namespace BatmanSharp
 
             if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Batrider) return;
 
-            var flamebreaklvl = me.Spellbook.SpellW.Level;
+            if (flamebreak == null)
+                flamebreak = me.Spellbook.SpellW;
+
             var range = me.Spellbook.SpellW.CastRange;
+
+            var flamebreaklvl = me.Spellbook.SpellW.Level;
 
             if (Utils.SleepCheck("killstealW") && Menu.Item("flameks").GetValue<bool>())
             {
@@ -317,6 +325,8 @@ namespace BatmanSharp
                     foreach (var v in enemy)
                     {
                         var damage = Math.Floor((wDamage[flamebreaklvl] * (1 - v.MagicDamageResist)) - (v.HealthRegeneration * 5));
+
+                        //var damage = wDamage[flamebreaklvl];
                         if (v.Health < damage && me.Distance2D(v) < range)
                         {
                             flamebreak.UseAbility(v.Position);
@@ -341,9 +351,9 @@ namespace BatmanSharp
             if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Batrider) return;
 
             if (napalm == null)
-                napalm = me.Spellbook.SpellW;
+                napalm = me.Spellbook.SpellQ;
 
-            var range = me.Spellbook.SpellW.CastRange;
+            var range = me.Spellbook.SpellQ.CastRange;
 
             if (Utils.SleepCheck("napalm") && Menu.Item("sticky").GetValue<KeyBind>().Active)
             {
