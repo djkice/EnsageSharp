@@ -208,34 +208,34 @@ namespace BatmanSharp
                 {
                     lassoTarget = target;
 
-                    if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
+                    if (lassoTarget != null && (!lassoTarget.IsValid || !lassoTarget.IsVisible || !lassoTarget.IsAlive || lassoTarget.Health <= 0))
                     {
-                        target = null;
+                        lassoTarget = null;
                     }
 
-                    if (targetParticle == null && target != null)
+                    if (targetParticle == null && lassoTarget != null)
                     {
                         targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
                     }
-                    if ((target == null || !target.IsVisible || !target.IsAlive) && targetParticle != null)
+                    if ((lassoTarget == null || !lassoTarget.IsVisible || !lassoTarget.IsAlive) && targetParticle != null)
                     {
                         targetParticle.Dispose();
                         targetParticle = null;
                     }
 
-                    if (target != null && targetParticle != null)
+                    if (lassoTarget != null && targetParticle != null)
                     {
                         targetParticle.SetControlPoint(2, me.Position);
                         targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
-                        targetParticle.SetControlPoint(7, target.Position);
+                        targetParticle.SetControlPoint(7, lassoTarget.Position);
                     }
 
                     if (lasso != null & lasso.CanBeCasted() && useAbility.IsEnabled(lasso.Name) && Utils.SleepCheck("lasso"))
                     {
-                        var targetDistance = me.Distance2D(target);
+                        var targetDistance = me.Distance2D(lassoTarget);
                         if (blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && targetDistance > 500 && targetDistance <= (1170 + lrange) && Utils.SleepCheck("blink"))
                         {
-                            blink.UseAbility(target.Position);
+                            blink.UseAbility(lassoTarget.Position);
                             Utils.Sleep(250 + Game.Ping, "blink");
                         }
 
@@ -246,18 +246,18 @@ namespace BatmanSharp
                         }
                         if (force != null && force.CanBeCasted() && useItem.IsEnabled(force.Name) && Utils.SleepCheck("force") && blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && Utils.SleepCheck("blink") && targetDistance > 1170 && targetDistance <= (1760 + lrange))
                         {
-                            blink.UseAbility(target.Position);
+                            blink.UseAbility(lassoTarget.Position);
                             force.UseAbility(me);
                             Utils.Sleep(250 + Game.Ping, "blink");
                             Utils.Sleep(250 + Game.Ping, "force");
                         }
                         if (targetDistance <= lrange)
-                            lasso.UseAbility(target);
+                            lasso.UseAbility(lassoTarget);
                         Utils.Sleep(600 + Game.Ping, "lasso");
                     }
                     else if (!me.HasModifier("modifier_batrider_flaming_lasso"))
                     {
-                        me.Move(target.Predict(lrange));
+                        me.Move(lassoTarget.Predict(lrange));
                     }
 
                 }
