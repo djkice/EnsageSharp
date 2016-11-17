@@ -207,6 +207,8 @@ namespace ODSharp
                 {
 
                     var targetDistance = me.Distance2D(target);
+                    var pikeTarget; 
+                    
                     if (me.CanAttack() && me.CanCast())
 
                         if (orb != null && orb.IsValid && orb.CanBeCasted() && me.CanCast() && Utils.SleepCheck("orb") && !target.UnitState.HasFlag(UnitState.MagicImmune))
@@ -251,9 +253,9 @@ namespace ODSharp
 
                     if (pike != null && pike.CanBeCasted() && menuValue.IsEnabled(pike.Name) && Utils.SleepCheck("pike"))
                     {
-                        pike.UseAbility(target);
+                        pikeTarget = target;
+                        pike.UseAbility(pikeTarget);
                         Utils.Sleep(150 + Game.Ping, "pike");
-
                     }
 
                     if (veil != null && veil.CanBeCasted() && !target.IsMagicImmune() && !target.IsIllusion && Utils.SleepCheck("veil") && menuValue.IsEnabled(veil.Name))
@@ -289,16 +291,18 @@ namespace ODSharp
                     {
                         if (me.CanAttack() && me.CanCast())
                         {
-
-                            if (orb != null && orb.IsValid && orb.CanBeCasted() && me.CanCast() && Utils.SleepCheck("orb") && !target.UnitState.HasFlag(UnitState.MagicImmune))
+                            if (pikeTarget != null && pikeTarget.IsAlive && !pikeTarget.IsInvul() && !pikeTarget.IsIllusion && pikeTarget.IsVisible) {
+                                
+                            if (orb != null && orb.IsValid && orb.CanBeCasted() && me.CanCast() && Utils.SleepCheck("orb") && !pikeTarget.UnitState.HasFlag(UnitState.MagicImmune))
                             {
-                                orb.UseAbility(target);
+                                orb.UseAbility(pikeTarget);
                                 Utils.Sleep(50, "orb");
                             }
                         }
                         else {
-                            me.Attack(target);
+                            me.Attack(pikeTarget);
                             Utils.Sleep(150 + Game.Ping, "orb");
+                        }
                         }
                     }
 
