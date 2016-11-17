@@ -101,7 +101,17 @@ namespace AxeSharp
             if (culling != null && culling.Level > 0)
             {
                 target = GetLowHpHeroInDistance(me, blinkRadius);
-                Console.WriteLine(target);
+                if (targetParticle == null && target != null)
+                {
+                    targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
+                }
+
+                if (target != null && targetParticle != null)
+                {
+                    targetParticle.SetControlPoint(2, me.Position);
+                    targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
+                    targetParticle.SetControlPoint(7, target.Position);
+                }
 
                 //check for blink
                 if (target != null && me.Health > 400 && blink != null && blink.CanBeCasted() && Utils.SleepCheck("blink"))
@@ -113,7 +123,17 @@ namespace AxeSharp
                 }
 
                 target = GetLowHpHeroInDistance(me, 300);
-                Console.WriteLine(target);
+                if (targetParticle == null && target != null)
+                {
+                    targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
+                }
+
+                if (target != null && targetParticle != null)
+                {
+                    targetParticle.SetControlPoint(2, me.Position);
+                    targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
+                    targetParticle.SetControlPoint(7, target.Position);
+                }
                 //check for ult
                 if (target != null && culling != null && (culling.Level > 0) && culling.CanBeCasted() && Utils.SleepCheck("culling"))
                 {
@@ -131,7 +151,17 @@ namespace AxeSharp
             killedTarget = target;
 
             target = GetHeroInAgro(me);
-            Console.WriteLine(target);
+            if (targetParticle == null && target != null)
+            {
+                targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
+            }
+
+            if (target != null && targetParticle != null)
+            {
+                targetParticle.SetControlPoint(2, me.Position);
+                targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
+                targetParticle.SetControlPoint(7, target.Position);
+            }
 
             if (target != null && !target.Equals(killedTarget))
             {
@@ -158,23 +188,12 @@ namespace AxeSharp
                 }
             }
 
-            if (targetParticle == null && target != null)
-            {
-                targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
-            }
-
             if ((target == null || !target.IsVisible || !target.IsAlive) && targetParticle != null)
             {
                 targetParticle.Dispose();
                 targetParticle = null;
             }
 
-            if (target != null && targetParticle != null)
-            {
-                targetParticle.SetControlPoint(2, me.Position);
-                targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
-                targetParticle.SetControlPoint(7, target.Position);
-            }
 
         }
 
