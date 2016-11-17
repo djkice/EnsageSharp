@@ -186,13 +186,13 @@ namespace BatmanSharp
 
                         if (firefly != null & firefly.CanBeCasted() && useAbility.IsEnabled(firefly.Name) && Utils.SleepCheck("firefly") && targetDistance <= ffrange)
                         {
-                            firefly.UseAbility(target.Position);
+                            firefly.UseAbility();
                             Utils.Sleep(400 + Game.Ping, "firefly");
                         }
 
                         if (flamebreak != null & flamebreak.CanBeCasted() && useAbility.IsEnabled(flamebreak.Name) && Utils.SleepCheck("flamebreak") && targetDistance <= frange)
                         {
-                            flamebreak.UseAbility();
+                            flamebreak.UseAbility(target.Position);
                             Utils.Sleep(170 + Game.Ping, "flamebreak");
                         }
                     }
