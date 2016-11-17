@@ -206,7 +206,6 @@ namespace BatmanSharp
             {
                 if (me.IsAlive)
                 {
-                    lassoTarget = target;
 
                     if (lassoTarget != null && (!lassoTarget.IsValid || !lassoTarget.IsVisible || !lassoTarget.IsAlive || lassoTarget.Health <= 0))
                     {
