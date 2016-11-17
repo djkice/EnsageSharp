@@ -150,10 +150,12 @@ namespace BatmanSharp
                     }
                 }
 
-                var targetDistance = me.Distance2D(target);
+                
 
                 if (target != null && target.IsAlive && !target.IsInvul() && !target.IsIllusion)
                 {
+
+                    var targetDistance = me.Distance2D(target);
 
                     if (me.CanAttack() && me.CanCast())
                     {
@@ -305,7 +307,7 @@ namespace BatmanSharp
                         var damage = Math.Floor((wDamage[flamebreaklvl] * (1 - v.MagicDamageResist)) - (v.HealthRegeneration * 5));
                         if (v.Health < damage && me.Distance2D(v) < range)
                         {
-                            flamebreak.UseAbility(v);
+                            flamebreak.UseAbility(v.Position);
                             Utils.Sleep(200 + Game.Ping, "killstealW");
                         }
                     }
@@ -340,7 +342,7 @@ namespace BatmanSharp
                     {
                         if (me.Distance2D(v) < range)
                         {
-                            napalm.UseAbility(v);
+                            napalm.UseAbility(v.Position);
                             Utils.Sleep(30 + Game.Ping, "napalm");
                         }
                     }
