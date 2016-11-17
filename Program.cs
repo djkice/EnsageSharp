@@ -1,86 +1,98 @@
-﻿using Ensage;
-using Ensage.Common;
-using Ensage.Common.Extensions;
-using Ensage.Common.Menu;
-using SharpDX;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AxeSharp
+using Ensage;
+using Ensage.Common;
+using Ensage.Common.Extensions;
+using Ensage.Common.Menu;
+using SharpDX;
+
+namespace BatmanSharp
 {
-    class Program
+    internal class Program
     {
-        private static readonly Menu Menu = new Menu("AxeSharp", "axesharp", true, "npc_dota_hero_axe", true);
-
-        private const int agroDistance = 300;
-        private const int blinkRadius = 1180;
-        private const double agroDelay = 0.4;
-
+        private static Ability napalm, flamebreak, firefly, lasso;
+        private static Item blink, force;
+        private static Hero me, target, lassoTarget;
+        private static readonly Menu Menu = new Menu("BatmanSharp", "BatmanSharp", true, "npc_dota_hero_batrider", true);
+        private static bool doCombo;
+        private static bool doUlt;
+        private static AbilityToggler useItem;
         private static AbilityToggler useAbility;
-
-        private static Item blink, bladeMail;
-
         private static bool useitemCheck;
         private static bool useabilityCheck;
-
-        private static Hero me, target, killedTarget;
-        private static Ability call, hunger, culling;
         private static ParticleEffect targetParticle;
+
+        private static readonly int[] wDamage = new int[5] { 0, 100, 150, 210, 280 };
+
 
         static void Main(string[] args)
         {
 
             Game.OnUpdate += Game_OnUpdate;
-            Console.WriteLine("AxeSharp loaded!");
+            Game.OnWndProc += Game_OnWndProc;
+            Game.OnUpdate += Killsteal;
+            Game.OnUpdate += NapalmHarras;
 
-            var useAbilities = new Dictionary<string, bool>
-            {
-              {"item_blink", true}, {"item_blade_mail", true }
-            };
+            Menu.AddItem(new MenuItem("comboKey", "Combo Key").SetValue(new KeyBind('G', KeyBindType.Press)));
+            Menu.AddItem(new MenuItem("ultKey", "Ultimate Modes").SetValue(new KeyBind('L', KeyBindType.Toggle)).SetTooltip("Will lock target, move towards and use items to lasso"));
+            Menu.AddItem(new MenuItem("sticky", "Napalm Harras").SetValue(new KeyBind('O', KeyBindType.Toggle)).SetTooltip("Harras closest enemy with Sticky Napalm"));
+            Menu.AddItem(new MenuItem("flameks", "Flamebreak Kill Steal").SetValue(true)).SetTooltip("Kill steal with flamebreak if possible");
 
-            var useItems = new Dictionary<string, bool>
-            {
-              {"axe_berserkers_call", true}, {"axe_battle_hunger", true }, { "axe_culling_blade", true }
-            };
+            var comboItems = new Dictionary<string, bool>
+             {
+               {"item_blink", true}, { "item_force_staff", true }
+             };
 
-            Menu.AddItem(new MenuItem("Items", "Use Items:").SetValue(new AbilityToggler(useItems)));
-            Menu.AddItem(new MenuItem("Abilities", "Use Abilities:").SetValue(new AbilityToggler(useAbilities)));
+            var comboAbilities = new Dictionary<string, bool>
+             {
+               {"batrider_sticky_napalm", true}, { "batrider_flamebreak", true }, {"batrider_firefly", true }, {"batrider_flaming_lasso", true }
+             };
+
+            Menu.AddItem(new MenuItem("Items", "Use Items:").SetValue(new AbilityToggler(comboItems)));
+            Menu.AddItem(new MenuItem("Abilities", "Use Abilities:").SetValue(new AbilityToggler(comboAbilities)));
 
             Menu.AddToMainMenu();
 
         }
 
-        private static void Game_OnUpdate(EventArgs args)
+        public static void Game_OnUpdate(EventArgs args)
         {
-            Hero me = ObjectManager.LocalHero;
+            me = ObjectManager.LocalHero;
 
             if (!Game.IsInGame || Game.IsPaused || Game.IsWatchingGame)
                 return;
 
-            
-            if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Axe)
+            if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Batrider)
                 return;
 
             if (me == null)
                 return;
 
-            if (call == null)
-                call = me.Spellbook.SpellQ;
+            if (napalm == null)
+                napalm = me.Spellbook.SpellQ;
+            var nrange = me.Spellbook.SpellQ.CastRange;
 
-            if (hunger == null)
-                hunger = me.Spellbook.SpellW;
+            if (flamebreak == null)
+                flamebreak = me.Spellbook.SpellW;
+            var frange = me.Spellbook.SpellW.CastRange;
 
-            if (culling == null)
-                culling = me.Spellbook.SpellR;
+            if (firefly == null)
+                flamebreak = me.Spellbook.SpellE;
+            var ffrange = me.Spellbook.SpellE.CastRange;
+
+            if (lasso == null)
+                lasso = me.Spellbook.SpellR;
+            var lrange = me.Spellbook.SpellR.CastRange;
+
+            if (force == null)
+                force = me.FindItem("item_force_staff");
 
             if (blink == null)
                 blink = me.FindItem("item_blink");
-
-            if (blink == null)
-                blink = me.FindItem("item_blade_mail");
 
             if (!useitemCheck)
             {
@@ -94,234 +106,249 @@ namespace AxeSharp
                 useabilityCheck = true;
             }
 
-
-            //add targetting, combo and orbwalk
-
-            if (culling != null && culling.Level > 0)
+            if (doCombo)
             {
-                target = GetLowHpHeroInDistance(me, blinkRadius);
+                target = TargetSelector.ClosestToMouse(me);
 
-                //check for blink
-                if (target != null && me.Health > 400 && blink != null && blink.CanBeCasted() && Utils.SleepCheck("blink"))
+                if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
                 {
-                    if (!useAbilityAndGetResult(blink, "blink", target, true, me))
-                    {
-                        return;
-                    }
+                    target = null;
                 }
 
-                target = GetLowHpHeroInDistance(me, 300);
-
-                //check for ult
-                if (target != null && culling != null && (culling.Level > 0) && culling.CanBeCasted() && Utils.SleepCheck("culling"))
+                if (targetParticle == null && target != null)
                 {
-                    if (!useAbilityAndGetResult(culling, "culling", target, false, me))
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        return;
-                    }
+                    targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
                 }
-            }
-
-            killedTarget = target;
-
-            target = GetHeroInAgro(me);
-
-            if (target != null && !target.Equals(killedTarget))
-            {
-                //agro+blade mail combo
-
-                if (!useAbilityAndGetResult(call, "call", null, false, me))
+                if ((target == null || !target.IsVisible || !target.IsAlive) && targetParticle != null)
                 {
-                    return;
+                    targetParticle.Dispose();
+                    targetParticle = null;
                 }
 
-
-                if (call != null)
+                if (target != null && targetParticle != null)
                 {
-                    if (!call.CanBeCasted())
+                    targetParticle.SetControlPoint(2, me.Position);
+                    targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
+                    targetParticle.SetControlPoint(7, target.Position);
+                }
+
+                var canCancel = Orbwalking.CanCancelAnimation();
+
+                if (canCancel)
+                {
+                    if (target != null && !target.IsVisible && !Orbwalking.AttackOnCooldown(target))
                     {
-                        if ((call.CooldownLength - call.Cooldown) < 3.2)
+                        target = TargetSelector.ClosestToMouse(me);
+                    }
+                    else if (target == null || !Orbwalking.AttackOnCooldown(target) && target.HasModifiers(new[] { "modifier_dazzle_shallow_grave", "modifier_item_blade_mail_reflect" }, false))
+                    {
+                        var bestAa = me.BestAATarget();
+                        if (bestAa != null)
                         {
-                            if (!useAbilityAndGetResult(bladeMail, "bladeMail", null, false, me))
-                            {
-                                return;
-                            }
+                            target = TargetSelector.BestAutoAttackTarget(me); ;
                         }
                     }
                 }
-            }
 
-            if (targetParticle == null && target != null)
-            {
-                targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
-            }
+                var targetDistance = me.Distance2D(target);
 
-            if ((target == null || !target.IsVisible || !target.IsAlive) && targetParticle != null)
-            {
-                targetParticle.Dispose();
-                targetParticle = null;
-            }
-
-            if (target != null && targetParticle != null)
-            {
-                targetParticle.SetControlPoint(2, me.Position);
-                targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
-                targetParticle.SetControlPoint(7, target.Position);
-            }
-
-        }
-
-        private static bool useAbilityAndGetResult(Ability ability, string codeWord, Hero target, bool isPos, Hero me)
-        {
-            if (ability == null)
-            {
-                return true;
-            }
-
-            if (ability.CanBeCasted() && !ability.IsInAbilityPhase && Utils.SleepCheck(codeWord))
-            {
-                if (target != null)
+                if (target != null && target.IsAlive && !target.IsInvul() && !target.IsIllusion)
                 {
-                    if (isPos)
+
+                    if (me.CanAttack() && me.CanCast())
                     {
 
-                        ability.UseAbility(target.Position);
-                    }
-                    else
-                    {
-                        ability.UseAbility(target);
+                        if (!Utils.SleepCheck("attacking"))
+                        {
+                            Orbwalking.Orbwalk(target, Game.Ping);
+                            Utils.Sleep(200, "attacking");
+                        }
+
+                        if (blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && targetDistance > 500 && targetDistance <= 1170 && Utils.SleepCheck("blink"))
+                        {
+                            blink.UseAbility(target.Position);
+                            Utils.Sleep(250 + Game.Ping, "blink");
+                        }
+
+                        if (force != null && force.CanBeCasted() && useItem.IsEnabled(force.Name) && Utils.SleepCheck("force") && targetDistance > 200 && targetDistance <= (570 + me.AttackRange))
+                        {
+                            force.UseAbility(me);
+                            Utils.Sleep(250 + Game.Ping, "force");
+                        }
+
+                        if (napalm != null & napalm.CanBeCasted() && useAbility.IsEnabled(napalm.Name) && Utils.SleepCheck("napalm") && targetDistance <= nrange)
+                        {
+                            napalm.UseAbility(target.Position);
+                            Utils.Sleep(30 + Game.Ping, "napalm");
+                        }
+
+                        if (firefly != null & firefly.CanBeCasted() && useAbility.IsEnabled(firefly.Name) && Utils.SleepCheck("firefly") && targetDistance <= ffrange)
+                        {
+                            firefly.UseAbility(target.Position);
+                            Utils.Sleep(400 + Game.Ping, "firefly");
+                        }
+
+                        if (flamebreak != null & flamebreak.CanBeCasted() && useAbility.IsEnabled(flamebreak.Name) && Utils.SleepCheck("flamebreak") && targetDistance <= frange)
+                        {
+                            flamebreak.UseAbility();
+                            Utils.Sleep(170 + Game.Ping, "flamebreak");
+                        }
                     }
                 }
                 else
                 {
-                    ability.UseAbility();
+                    me.Move(Game.MousePosition);
                 }
+            }
+            else if (doUlt)
+            {
+                target = lassoTarget;
+                var targetDistance = target.Distance2D(target);
 
-                Utils.Sleep(ability.GetCastDelay(me, target, true) * 1000, codeWord);
-
-                if (ability.CanBeCasted())
+                if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
                 {
-                    return false;
+                    target = null;
                 }
-            }
-            return true;
-        }
 
-        private static Hero GetLowHpHeroInDistance(Hero me, float maxDistance)
-        {
-            var enemies = ObjectManager.GetEntities<Hero>()
-                    .Where(x => x.IsAlive && !x.IsIllusion && x.Team != me.Team && (getULtDamage(me) > (x.Health - 5)
-                    && NotDieFromBladeMail(x, me, getULtDamage(me)))).ToList();
-
-            target = getHeroInDistance(me, enemies, maxDistance);
-
-            return target;
-        }
-
-        private static bool NotDieFromBladeMail(Unit enemy, Unit me, double damageDone)
-        {
-            return !(enemy.Modifiers.FirstOrDefault(modifier => modifier.Name == "modifier_item_blade_mail_reflect") != null
-                && me.Health < damageDone);
-        }
-
-        private static int getULtDamage(Hero me)
-        {
-            Item aghanim = me.FindItem("item_ultimate_scepter");
-
-            int[] ultDamage;
-            if (aghanim != null)
-            {
-                ultDamage = new int[3] { 300, 425, 550 };
-            }
-            else
-            {
-                ultDamage = new int[3] { 250, 325, 400 };
-            }
-            var ultLevel = me.Spellbook.SpellR.Level;
-            var damage = ultDamage[ultLevel - 1];
-
-            return damage;
-        }
-
-        private static Hero GetHeroInAgro(Hero me)
-        {
-
-            var enemies = ObjectManager.GetEntities<Hero>()
-                    .Where(x => x.IsAlive && !x.IsIllusion && x.Team != me.Team).ToList();
-
-            List<Hero> enemiesForAgro = new List<Hero>();
-
-            foreach (var hero in enemies)
-            {
-                int targetSpeed = hero.MovementSpeed;
-
-                float distanceBefore = calculateDistance(me, hero);
-
-                double distanceAfter = distanceBefore + targetSpeed * (agroDelay - getTimeToTurn(me, hero));
-
-                //Console.WriteLine("distanceBefore" + distanceBefore);
-                //Console.WriteLine("getTimeToTurn(me, hero)" + getTimeToTurn(me, hero));
-                //Console.WriteLine("distanceAfter" + distanceAfter);
-                if (distanceAfter <= agroDistance && hero.IsAlive)
+                if (targetParticle == null && target != null)
                 {
-                    enemiesForAgro.Add(hero);
+                    targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
                 }
-            }
-
-            target = null;
-            if (enemiesForAgro.Count > 0)
-            {
-                target = getHeroInDistance(me, enemiesForAgro, agroDistance);
-            }
-
-            return target;
-        }
-
-        private static float calculateDistance(Hero me, Hero target)
-        {
-            var pos = target.Position;
-            var mePosition = me.Position;
-            return mePosition.Distance2D(pos);
-        }
-
-        private static double getTimeToTurn(Hero me, Hero enemy)
-        {
-            Vector3 myPos = me.Position;
-            Vector3 enemyPos = enemy.Position;
-
-            var difX = myPos.X - enemyPos.X;
-            var difY = myPos.Y - enemyPos.Y;
-            var degree = Math.Atan2(difY, difX);
-
-            var enemyDirection = Math.Atan2(enemy.Vector2FromPolarAngle().Y, enemy.Vector2FromPolarAngle().X);
-
-            var difDegree = Math.Abs(enemyDirection - degree);
-            var turnRate = Game.FindKeyValues(enemy.Name + "/MovementTurnRate", KeyValueSource.Hero).FloatValue;
-            var timeToTurn = 0.03 * (Math.PI - difDegree) / turnRate;
-            return timeToTurn;
-        }
-
-        private static Hero getHeroInDistance(Hero me, List<Hero> enemies, float maxDistance)
-        {
-            target = null;
-            float minDistance = maxDistance;
-            foreach (var hero in enemies)
-            {
-                var distance = me.Distance2D(hero);
-                if (distance <= maxDistance && distance <= minDistance)
+                if ((target == null || !target.IsVisible || !target.IsAlive) && targetParticle != null)
                 {
-                    minDistance = distance;
-                    target = hero;
+                    targetParticle.Dispose();
+                    targetParticle = null;
                 }
+
+                if (target != null && targetParticle != null)
+                {
+                    targetParticle.SetControlPoint(2, me.Position);
+                    targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
+                    targetParticle.SetControlPoint(7, target.Position);
+                }
+
+                if (lasso != null & lasso.CanBeCasted() && useAbility.IsEnabled(lasso.Name) && Utils.SleepCheck("lasso"))
+                {
+                    if (blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && targetDistance > 500 && targetDistance <= (1170 + lrange) && Utils.SleepCheck("blink"))
+                    {
+                        blink.UseAbility(target.Position);
+                        Utils.Sleep(250 + Game.Ping, "blink");
+                    }
+
+                    if (force != null && force.CanBeCasted() && useItem.IsEnabled(force.Name) && Utils.SleepCheck("force") && targetDistance > 200 && targetDistance <= (570 + lrange))
+                    {
+                        force.UseAbility(me);
+                        Utils.Sleep(250 + Game.Ping, "force");
+                    }
+                    if (force != null && force.CanBeCasted() && useItem.IsEnabled(force.Name) && Utils.SleepCheck("force") && blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && Utils.SleepCheck("blink") && targetDistance > 1170 && targetDistance <= (1760 + lrange))
+                    {
+                        blink.UseAbility(target.Position);
+                        force.UseAbility(me);
+                        Utils.Sleep(250 + Game.Ping, "blink");
+                        Utils.Sleep(250 + Game.Ping, "force");
+                    }
+                    if (targetDistance <= lrange)
+                        lasso.UseAbility(target);
+                    Utils.Sleep(600 + Game.Ping, "lasso");
+                }
+                else
+                {
+                    me.Move(target.Predict(lrange));
+                }
+
             }
 
-            return target;
 
+        }
+        private static void Game_OnWndProc(WndEventArgs args)
+        {
+            if (!Game.IsChatOpen)
+            {
+
+                if (Menu.Item("comboKey").GetValue<KeyBind>().Active)
+                {
+                    doCombo = true;
+                }
+                else if (Menu.Item("ultKey").GetValue<KeyBind>().Active)
+                {
+                    lassoTarget = TargetSelector.ClosestToMouse(me);
+                    doUlt = true;
+                }
+                else
+                {
+                    doCombo = false;
+                    doUlt = false;
+                }
+            }
+        }
+
+        public static void Killsteal(EventArgs args)
+        {
+            if (!Game.IsInGame || Game.IsPaused || Game.IsWatchingGame)
+            {
+                return;
+            }
+            me = ObjectManager.LocalHero;
+
+            if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Batrider) return;
+
+            var flamebreaklvl = me.Spellbook.SpellW.Level;
+            var range = me.Spellbook.SpellW.CastRange;
+
+            if (Utils.SleepCheck("killstealW") && Menu.Item("flameks").GetValue<bool>())
+            {
+                if (flamebreak.CanBeCasted() && me.Mana > flamebreak.ManaCost)
+                {
+                    var enemy = ObjectManager.GetEntities<Hero>().Where(e => e.Team != me.Team && e.IsAlive && e.IsVisible && !e.IsIllusion && !e.UnitState.HasFlag(UnitState.MagicImmune) && me.Distance2D(e) < range).ToList();
+                    foreach (var v in enemy)
+                    {
+                        var damage = Math.Floor((wDamage[flamebreaklvl] * (1 - v.MagicDamageResist)) - (v.HealthRegeneration * 5));
+                        if (v.Health < damage && me.Distance2D(v) < range)
+                        {
+                            flamebreak.UseAbility(v.Position);
+                            Utils.Sleep(200 + Game.Ping, "killstealW");
+                        }
+                    }
+                }
+
+            }
+        }
+
+        public static void NapalmHarras(EventArgs args)
+        {
+            if (!Game.IsInGame || Game.IsPaused || Game.IsWatchingGame)
+            {
+                return;
+            }
+
+            me = ObjectManager.LocalHero;
+
+
+            if (me == null || me.ClassID != ClassID.CDOTA_Unit_Hero_Batrider) return;
+
+            if (napalm == null)
+                napalm = me.Spellbook.SpellW;
+
+            var range = me.Spellbook.SpellW.CastRange;
+
+            if (Utils.SleepCheck("napalm") && Menu.Item("sticky").GetValue<KeyBind>().Active)
+            {
+                if (napalm.CanBeCasted() && me.Mana > napalm.ManaCost)
+                {
+                    var enemy = ObjectManager.GetEntities<Hero>().Where(e => e.Team != me.Team && e.IsAlive && e.IsVisible && !e.IsIllusion && !e.UnitState.HasFlag(UnitState.MagicImmune) && me.Distance2D(e) < range).ToList();
+                    foreach (var v in enemy)
+                    {
+                        if (me.Distance2D(v) < range)
+                        {
+                            napalm.UseAbility(v.Position);
+                            Utils.Sleep(30 + Game.Ping, "napalm");
+                        }
+                    }
+                }
+
+            }
         }
 
     }
 }
+
