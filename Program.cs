@@ -150,10 +150,12 @@ namespace BatmanSharp
                     }
                 }
 
-                var targetDistance = me.Distance2D(target);
+                
 
                 if (target != null && target.IsAlive && !target.IsInvul() && !target.IsIllusion)
                 {
+
+                    var targetDistance = me.Distance2D(target);
 
                     if (me.CanAttack() && me.CanCast())
                     {
@@ -203,7 +205,7 @@ namespace BatmanSharp
             else if (doUlt)
             {
                 target = lassoTarget;
-                var targetDistance = target.Distance2D(target);
+                var targetDistance = me.Distance2D(target);
 
                 if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
                 {
@@ -341,7 +343,7 @@ namespace BatmanSharp
                         if (me.Distance2D(v) < range)
                         {
                             napalm.UseAbility(v.Position);
-                            Utils.Sleep(30 + Game.Ping, "napalm");
+                            Utils.Sleep(100 + Game.Ping, "napalm");
                         }
                     }
                 }
