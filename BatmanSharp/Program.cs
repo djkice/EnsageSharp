@@ -257,12 +257,16 @@ namespace BatmanSharp
                             Utils.Sleep(250 + Game.Ping, "force");
                         }
                         if (targetDistance <= lrange)
-                            lasso.UseAbility(lassoTarget);
-                        Utils.Sleep(600 + Game.Ping, "lasso");
+                        {
+                            lasso.UseAbility(target);
+                            Utils.Sleep(600 + Game.Ping, "lasso");
+                        }
+
                     }
                     else if (!me.HasModifier("modifier_batrider_flaming_lasso"))
                     {
-                        me.Move(lassoTarget.Predict(lrange));
+                            me.Move(target.Predict(lrange));
+
                     }
 
                 }
