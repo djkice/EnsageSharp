@@ -150,7 +150,7 @@ namespace BatmanSharp
                     }
                 }
 
-                
+
 
                 if (target != null && target.IsAlive && !target.IsInvul() && !target.IsIllusion)
                 {
@@ -181,7 +181,7 @@ namespace BatmanSharp
                         if (napalm != null & napalm.CanBeCasted() && useAbility.IsEnabled(napalm.Name) && Utils.SleepCheck("napalm") && targetDistance <= nrange)
                         {
                             napalm.UseAbility(target.Position);
-                            Utils.Sleep(30 + Game.Ping, "napalm");
+                            Utils.Sleep(100 + Game.Ping, "napalm");
                         }
 
                         if (firefly != null & firefly.CanBeCasted() && useAbility.IsEnabled(firefly.Name) && Utils.SleepCheck("firefly") && targetDistance <= ffrange)
@@ -197,67 +197,71 @@ namespace BatmanSharp
                         }
                     }
                 }
-                else
+               else
                 {
                     me.Move(Game.MousePosition);
                 }
             }
             else if (doUlt)
             {
-                target = lassoTarget;
-                var targetDistance = me.Distance2D(target);
+                if (me.IsAlive)
+                {
+                    target = lassoTarget;
+                    
 
-                if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
-                {
-                    target = null;
-                }
-
-                if (targetParticle == null && target != null)
-                {
-                    targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
-                }
-                if ((target == null || !target.IsVisible || !target.IsAlive) && targetParticle != null)
-                {
-                    targetParticle.Dispose();
-                    targetParticle = null;
-                }
-
-                if (target != null && targetParticle != null)
-                {
-                    targetParticle.SetControlPoint(2, me.Position);
-                    targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
-                    targetParticle.SetControlPoint(7, target.Position);
-                }
-
-                if (lasso != null & lasso.CanBeCasted() && useAbility.IsEnabled(lasso.Name) && Utils.SleepCheck("lasso"))
-                {
-                    if (blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && targetDistance > 500 && targetDistance <= (1170 + lrange) && Utils.SleepCheck("blink"))
+                    if (target != null && (!target.IsValid || !target.IsVisible || !target.IsAlive || target.Health <= 0))
                     {
-                        blink.UseAbility(target.Position);
-                        Utils.Sleep(250 + Game.Ping, "blink");
+                        target = null;
                     }
 
-                    if (force != null && force.CanBeCasted() && useItem.IsEnabled(force.Name) && Utils.SleepCheck("force") && targetDistance > 200 && targetDistance <= (570 + lrange))
+                    if (targetParticle == null && target != null)
                     {
-                        force.UseAbility(me);
-                        Utils.Sleep(250 + Game.Ping, "force");
+                        targetParticle = new ParticleEffect(@"particles\ui_mouseactions\range_finder_tower_aoe.vpcf", target);
                     }
-                    if (force != null && force.CanBeCasted() && useItem.IsEnabled(force.Name) && Utils.SleepCheck("force") && blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && Utils.SleepCheck("blink") && targetDistance > 1170 && targetDistance <= (1760 + lrange))
+                    if ((target == null || !target.IsVisible || !target.IsAlive) && targetParticle != null)
                     {
-                        blink.UseAbility(target.Position);
-                        force.UseAbility(me);
-                        Utils.Sleep(250 + Game.Ping, "blink");
-                        Utils.Sleep(250 + Game.Ping, "force");
+                        targetParticle.Dispose();
+                        targetParticle = null;
                     }
-                    if (targetDistance <= lrange)
-                        lasso.UseAbility(target);
-                    Utils.Sleep(600 + Game.Ping, "lasso");
-                }
-                else
-                {
-                    me.Move(target.Predict(lrange));
-                }
 
+                    if (target != null && targetParticle != null)
+                    {
+                        targetParticle.SetControlPoint(2, me.Position);
+                        targetParticle.SetControlPoint(6, new Vector3(1, 0, 0));
+                        targetParticle.SetControlPoint(7, target.Position);
+                    }
+
+                    if (lasso != null & lasso.CanBeCasted() && useAbility.IsEnabled(lasso.Name) && Utils.SleepCheck("lasso"))
+                    {
+                        var targetDistance = me.Distance2D(target);
+                        if (blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && targetDistance > 500 && targetDistance <= (1170 + lrange) && Utils.SleepCheck("blink"))
+                        {
+                            blink.UseAbility(target.Position);
+                            Utils.Sleep(250 + Game.Ping, "blink");
+                        }
+
+                        if (force != null && force.CanBeCasted() && useItem.IsEnabled(force.Name) && Utils.SleepCheck("force") && targetDistance > 200 && targetDistance <= (570 + lrange))
+                        {
+                            force.UseAbility(me);
+                            Utils.Sleep(250 + Game.Ping, "force");
+                        }
+                        if (force != null && force.CanBeCasted() && useItem.IsEnabled(force.Name) && Utils.SleepCheck("force") && blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && Utils.SleepCheck("blink") && targetDistance > 1170 && targetDistance <= (1760 + lrange))
+                        {
+                            blink.UseAbility(target.Position);
+                            force.UseAbility(me);
+                            Utils.Sleep(250 + Game.Ping, "blink");
+                            Utils.Sleep(250 + Game.Ping, "force");
+                        }
+                        if (targetDistance <= lrange)
+                            lasso.UseAbility(target);
+                        Utils.Sleep(600 + Game.Ping, "lasso");
+                    }
+                    else if (!me.HasModifier("modifier_batrider_flaming_lasso"))
+                    {
+                        me.Move(target.Predict(lrange));
+                    }
+
+                }
             }
 
 
