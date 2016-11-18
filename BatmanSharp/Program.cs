@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Ensage;
 using Ensage.Common;
@@ -29,7 +27,7 @@ namespace BatmanSharp
         private static readonly int[] wDamage = new int[5] { 0, 100, 150, 210, 280 };
 
 
-        static void Main(string[] args)
+        static void Main()
         {
 
             Game.OnUpdate += Game_OnUpdate;
@@ -196,6 +194,12 @@ namespace BatmanSharp
                             Utils.Sleep(100 + Game.Ping, "napalm");
                         }
 
+                        if (!me.IsAttacking() && Utils.SleepCheck("follow"))
+                        {
+                            me.Move(Game.MousePosition);
+                            Utils.Sleep(150 + Game.Ping, "follow");
+                        }
+
                     }
                 }
                else
@@ -239,10 +243,10 @@ namespace BatmanSharp
                         if (lasso != null & lasso.CanBeCasted() && useAbility.IsEnabled(lasso.Name) && Utils.SleepCheck("lasso"))
                         {
 
-                            if (force != null && force.CanBeCasted() && useItem.IsEnabled(force.Name) && Utils.SleepCheck("force") && blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && Utils.SleepCheck("blink") && targetDistance > 1170 && targetDistance <= (1760 + lrange))
+                            if (force != null && force.CanBeCasted() && useItem.IsEnabled(force.Name) && Utils.SleepCheck("force") && blink != null && blink.CanBeCasted() && useItem.IsEnabled(blink.Name) && Utils.SleepCheck("blink") && targetDistance > (1370 + lrange) && targetDistance <= (1760 + lrange))
                             {
-                                blink.UseAbility(target.Position);
                                 force.UseAbility(me);
+                                blink.UseAbility(target.Position);
                                 Utils.Sleep(250 + Game.Ping, "blink");
                                 Utils.Sleep(250 + Game.Ping, "force");
                             }
@@ -266,7 +270,7 @@ namespace BatmanSharp
                             }
 
                         }
-                        else if (!me.HasModifier("modifier_batrider_flaming_lasso") && me.IsAlive)
+                        else if (!me.HasModifier("modifier_batrider_flaming_lasso") && me.IsAlive && me.CanMove())
                         {
                             me.Move(target.Predict(lrange));
                         }
@@ -274,7 +278,6 @@ namespace BatmanSharp
                     }
                 }
             }
-
 
         }
         private static void Game_OnWndProc(WndEventArgs args)
@@ -292,7 +295,6 @@ namespace BatmanSharp
                     {
                         lassoTarget = TargetSelector.ClosestToMouse(me);
                         doUlt = true;
-
                     }
                 }
                 else
@@ -327,9 +329,9 @@ namespace BatmanSharp
                     var enemy = ObjectManager.GetEntities<Hero>().Where(e => e.Team != me.Team && e.IsAlive && e.IsVisible && !e.IsIllusion && !e.UnitState.HasFlag(UnitState.MagicImmune) && me.Distance2D(e) < range).ToList();
                     foreach (var v in enemy)
                     {
-                        //var damage = Math.Floor((wDamage[flamebreaklvl] * (1 - v.MagicDamageResist)) - (v.HealthRegeneration * 5));
+                        var damage = Math.Floor((wDamage[flamebreaklvl] * (1 - v.MagicDamageResist)) - (v.HealthRegeneration * 5));
 
-                        var damage = wDamage[flamebreaklvl];
+                        //var damage = wDamage[flamebreaklvl];
                         if (v.Health < damage && me.Distance2D(v) < range)
                         {
                             flamebreak.UseAbility(v.Position);
