@@ -81,7 +81,7 @@ namespace BatmanSharp
             var frange = me.Spellbook.SpellW.CastRange;
 
             if (firefly == null)
-                flamebreak = me.Spellbook.SpellE;
+                firefly = me.Spellbook.SpellE;
 
             if (lasso == null)
                 lasso = me.Spellbook.SpellR;
