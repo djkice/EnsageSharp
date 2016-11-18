@@ -270,15 +270,12 @@ namespace AlchemistSharp
                             Utils.Sleep(350, "illu_attacking" + illusion.Handle);
                                                     }
                     }
-                                    else
+
+                }
+                else
                 {
-                    me.Move(Game.MousePosition);
-                }
-                }
-    //            else
-     //           {
-      //              me.Move(Game.MousePosition);
-        //        }
+                   me.Move(Game.MousePosition);
+               }
             }
 
             if (concModif != null && concModif.ElapsedTime >= stunBrew && Menu.Item("dodgeTog").GetValue<bool>())
