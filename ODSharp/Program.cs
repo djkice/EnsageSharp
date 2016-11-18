@@ -287,7 +287,6 @@ namespace ODSharp
                     }
 
                     if (me.Modifiers.ToList().Exists(x => x.Name == "modifier_item_hurricane_pike_range") && Utils.SleepCheck("orb"))
-
                     {
                         if (me.CanAttack() && me.CanCast())
                         {
@@ -295,13 +294,21 @@ namespace ODSharp
                             {
                                 if (orb != null && orb.IsValid && orb.CanBeCasted() && me.CanCast() && Utils.SleepCheck("orb") && !target.UnitState.HasFlag(UnitState.MagicImmune))
                                 {
+                                    if (me.Mana > orb.ManaCost) {
                                     orb.UseAbility(pikeTarget);
                                     Utils.Sleep(50, "orb");
+                                    }
+                                    else 
+                                    {
+                                    me.Attack(pikeTarget);
+                                    Utils.Sleep(150 + Game.Ping, "orb");
+                                    }
                                 }
-                            }
-                            else {
+                                else 
+                                {
                                 me.Attack(pikeTarget);
                                 Utils.Sleep(150 + Game.Ping, "orb");
+                                }
                             }
                         }
                     }
