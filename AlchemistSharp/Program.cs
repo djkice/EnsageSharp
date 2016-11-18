@@ -249,11 +249,11 @@ namespace AlchemistSharp
                                 Utils.Sleep(150 + Game.Ping, "bkb");
                             }
                             // orb walk fix attempt. 
-                         if (!me.IsAttacking() && Utils.SleepCheck("follow") && concModif == null)
-                        {
-                            me.Move(Game.MousePosition);
-                            Utils.Sleep(150 + Game.Ping, "follow");
-                        }
+                        // if (!me.IsAttacking() && Utils.SleepCheck("follow") && concModif == null)
+                       // {
+                       //     me.Move(Game.MousePosition);
+                         //   Utils.Sleep(150 + Game.Ping, "follow");
+                      //  }
 
                             // else 
                             // {
@@ -270,11 +270,15 @@ namespace AlchemistSharp
                             Utils.Sleep(350, "illu_attacking" + illusion.Handle);
                                                     }
                     }
-                }
-                else
+                                    else
                 {
                     me.Move(Game.MousePosition);
                 }
+                }
+    //            else
+     //           {
+      //              me.Move(Game.MousePosition);
+        //        }
             }
 
             if (concModif != null && concModif.ElapsedTime >= stunBrew && Menu.Item("dodgeTog").GetValue<bool>())
