@@ -249,7 +249,7 @@ namespace AlchemistSharp
                                 Utils.Sleep(150 + Game.Ping, "bkb");
                             }
                             // orb walk fix attempt. 
-                         if (!me.IsAttacking() && Utils.SleepCheck("follow"))
+                         if (!me.IsAttacking() && Utils.SleepCheck("follow") && concModif == null)
                         {
                             me.Move(Game.MousePosition);
                             Utils.Sleep(150 + Game.Ping, "follow");
