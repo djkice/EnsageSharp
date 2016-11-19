@@ -368,7 +368,7 @@ namespace AxeSharp
                     var enemy = ObjectManager.GetEntities<Hero>().Where(e => e.Team != me.Team && e.IsAlive && e.IsVisible && !e.IsIllusion && !e.UnitState.HasFlag(UnitState.MagicImmune) && me.Distance2D(e) < range).ToList();
                     foreach (var v in enemy)
                     {
-                        if (me.Distance2D(v) < range)
+                        if (me.Distance2D(v) < range && !v.HasModifier("modifier_axe_battle_hunger"))
                         {
                             hunger.UseAbility(v);
                             Utils.Sleep(300, "hungerHarras");
