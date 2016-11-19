@@ -201,10 +201,10 @@ namespace BatmanSharp
                         }
 
                     }
-                }
-               else
-                {
-                    me.Move(Game.MousePosition);
+                    else
+                    {
+                        me.Move(target.Predict(me.AttackRange));
+                    }
                 }
             }
             else if (doUlt)
@@ -270,7 +270,7 @@ namespace BatmanSharp
                             }
 
                         }
-                        else if (!me.HasModifier("modifier_batrider_flaming_lasso") && me.IsAlive && me.CanMove())
+                        else if (!me.HasModifier("modifier_batrider_flaming_lasso_self") && me.IsAlive && me.CanMove())
                         {
                             me.Move(target.Predict(lrange));
                         }
@@ -380,4 +380,3 @@ namespace BatmanSharp
 
     }
 }
-
