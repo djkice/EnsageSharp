@@ -38,19 +38,19 @@ namespace AxeSharp
             Game.OnUpdate += HungerHarras;
             Console.WriteLine("AxeSharp loaded!");
 
-            var useAbilities = new Dictionary<string, bool>
+            var useItems = new Dictionary<string, bool>
             {
               {"item_blink", true}, {"item_blade_mail", true }
             };
 
-            var useItems = new Dictionary<string, bool>
+            var useAbilities = new Dictionary<string, bool>
             {
               {"axe_berserkers_call", true}, {"axe_battle_hunger", true }, { "axe_culling_blade", true }
             };
 
             Menu.AddItem(new MenuItem("Items", "Use Items:").SetValue(new AbilityToggler(useItems)));
             Menu.AddItem(new MenuItem("Abilities", "Use Abilities:").SetValue(new AbilityToggler(useAbilities)));
-            Menu.AddItem(new MenuItem("hhs", "Hunger Harras").SetValue(new KeyBind(45, KeyBindType.Toggle)).SetTooltip("Harras with Battle Hunger)"));
+            Menu.AddItem(new MenuItem("hhs", "Hunger Harras").SetValue(new KeyBind(45, KeyBindType.Toggle)).SetTooltip("Harras with Battle Hunger"));
             Menu.AddToMainMenu();
 
         }
