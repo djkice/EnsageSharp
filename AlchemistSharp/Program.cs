@@ -284,6 +284,10 @@ namespace AlchemistSharp
                     }
 
                 }
+                else
+                {
+                    me.Move(Game.MousePosition);
+                }
 
             }
 
