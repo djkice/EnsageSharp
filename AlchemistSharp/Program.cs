@@ -161,28 +161,38 @@ namespace AlchemistSharp
                     {
                         if (!invisModif)
                         {
+                             if (Utils.SleepCheck("attacking"))
+                           {
+                               Orbwalking.Orbwalk(target, Game.Ping);
+                               Utils.Sleep(200, "attacking");
+                           }
 
                             if (me.Distance2D(target) < 1000)
                             {
-                                if (concoction != null && concoction.CanBeCasted() && useAbility.IsEnabled(concoction.Name) && Utils.SleepCheck("concoction"))
+                                if (concoction != null && concoction.CanBeCasted() && useAbility.IsEnabled(concoction.Name) && Utils.SleepCheck("concoction") && Utils.SleepCheck("throwconc"))
                                 {
                                     concoction.UseAbility();
                                     Utils.Sleep(250 + Game.Ping, "concoction");
                                 }
                                 if (concModif != null && useAbility.IsEnabled(concoction.Name) && /* !target.UnitState.HasFlag(UnitState.MagicImmune)  && */ me.Distance2D(target) < 1000)
                                 {
+                                    Random rnd = new Random();
+                                    double random = rnd.NextDouble(0.5, 1);
                                     if (me.Distance2D(target) < stunrange)
                                     {
+
                                         if (!me.CanAttack())
                                         {
                                             me.Move(target.Predict(200));
                                         }
-                                        else
+                                        else if (me.CanAttack() && Utils.SleepCheck("attacking"))
                                         {
-                                            me.Attack(target);
+                                            Orbwalking.Orbwalk(target, Game.Ping);
+                                            Utils.Sleep(200, "attacking");
                                         }
+
                                     }
-                                    if (concModif.ElapsedTime < stunBrew && concModif.ElapsedTime > maxStun && me.Distance2D(target) <= stunrange)
+                                    if (throwconc != null && concModif.ElapsedTime < stunBrew && concModif.ElapsedTime + random > maxStun && me.Distance2D(target) <= stunrange && Utils.SleepCheck("throwconc"))
                                     {
                                         throwconc.UseAbility(target);
                                         Utils.Sleep(250 + Game.Ping, "throwconc");
@@ -239,25 +249,25 @@ namespace AlchemistSharp
                                 bkb.UseAbility();
                                 Utils.Sleep(150 + Game.Ping, "bkb");
                             }
-                            // orb walk fix attempt. 
+                            // orb walk fix attempt.
                             // if (!me.IsAttacking() && Utils.SleepCheck("follow") && concModif == null)
                             // {
                             //     me.Move(Game.MousePosition);
                             //   Utils.Sleep(150 + Game.Ping, "follow");
                             //  }
 
-                            // else 
+                            // else
                             // {
                             //    me.Move(target);
                             //  }
 
                         }
 
-                  else if (!Utils.SleepCheck("attacking"))
-                    {
-                                Orbwalking.Orbwalk(target, Game.Ping);
-                                Utils.Sleep(200, "attacking");
-                    }
+                        else if (Utils.SleepCheck("attacking"))
+                        {
+                            Orbwalking.Orbwalk(target, Game.Ping);
+                            Utils.Sleep(200, "attacking");
+                        }
 
                         var illusions = ObjectManager.GetEntities<Hero>().Where(f => f.IsAlive && f.IsControllable && f.Team == me.Team && f.IsIllusion && f.Modifiers.Any(y => y.Name != "modifier_kill")).ToList();
 
