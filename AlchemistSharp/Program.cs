@@ -284,7 +284,7 @@ namespace AlchemistSharp
                     }
 
                 }
-                else
+                else if (target == null)
                 {
                     me.Move(Game.MousePosition);
                 }
