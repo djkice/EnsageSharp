@@ -57,7 +57,7 @@ namespace AlchemistSharp
         public static void Game_OnUpdate(EventArgs args)
         {
             me = ObjectManager.LocalHero;
-            float stunBrew = 5.4f - (Game.Ping / 1000);
+            float stunBrew = 5.0f - (Game.Ping / 1000);
             float maxStun = 4.8f - (Game.Ping / 1000);
             var stunrange = 775;
             var acidrange = 625;
